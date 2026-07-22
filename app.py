@@ -2,6 +2,8 @@ import streamlit as st
 
 from config import APP_NAME
 from modules.loader import DataLoader
+from modules.sidebar import create_sidebar
+from modules.dashboard import show_dashboard
 
 st.set_page_config(
     page_title=APP_NAME,
@@ -9,27 +11,25 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("📊 Smart Data Analyzer")
+menu = create_sidebar()
 
-st.write(
-    "Faça upload de um arquivo CSV, Excel ou JSON."
-)
+st.title(APP_NAME)
 
 arquivo = st.file_uploader(
-    "Escolha um arquivo",
-    type=["csv", "xlsx", "json"]
+    "Selecione um arquivo",
+    type=["csv","xlsx","json"]
 )
 
 if arquivo:
 
-    try:
+    df = DataLoader.load(arquivo)
 
-        df = DataLoader.load(arquivo)
+    if menu == "Dashboard":
 
-        st.success("Arquivo carregado com sucesso!")
+        show_dashboard(df)
 
-        st.dataframe(df)
+    else:
 
-    except Exception as erro:
-
-        st.error(erro)
+        st.info(
+            f"O módulo '{menu}' será implementado nas próximas etapas."
+        )
