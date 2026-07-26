@@ -3,22 +3,34 @@ from ai.ai_client import AIClient
 
 class LocalAIClient(AIClient):
 
+    """
+    Cliente local.
+
+    Utilizado quando nenhuma IA
+    estiver configurada.
+    """
+
     def ask(
         self,
         question: str,
         context: str
     ) -> str:
 
-        return f"""
-Pergunta:
+        resposta = f"""
+### Pergunta
+
 {question}
 
-Contexto recebido:
-
-{context}
+---
 
 Nenhum provedor de IA foi configurado.
 
-Configure OpenAI, Gemini, Claude ou outro modelo
-para obter respostas inteligentes.
+O contexto abaixo seria enviado para um modelo de IA.
+
+{context}
+
+Configure um cliente OpenAI, Gemini, Claude
+ou Ollama para obter respostas inteligentes.
 """
+
+        return resposta
