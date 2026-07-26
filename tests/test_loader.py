@@ -1,4 +1,5 @@
 from modules.loader import DataLoader
 
-def test_loader_exists():
+def test_loader():
+
     assert DataLoader is not None
