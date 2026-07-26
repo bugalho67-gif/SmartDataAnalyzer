@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
-from typing import Any
 
 
 class AIClient(ABC):
     """
-    Classe base para qualquer provedor de IA.
+    Interface para qualquer modelo de IA.
     """
 
     @abstractmethod
@@ -14,7 +15,7 @@ class AIClient(ABC):
         context: str
     ) -> str:
         """
-        Recebe uma pergunta e um contexto
-        e devolve uma resposta.
+        Recebe uma pergunta e o contexto
+        dos dados e devolve uma resposta.
         """
-        raise NotImplementedError
+        pass
