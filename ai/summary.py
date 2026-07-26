@@ -5,20 +5,20 @@ def summarize(df):
 
     info = analyze_dataframe(df)
 
-    texto = f"""
+    return f"""
 ## Resumo da Base
 
-• Registros: {info["rows"]}
+📄 Registros: {info["rows"]:,}
 
-• Colunas: {info["columns"]}
+📊 Colunas: {info["columns"]}
 
-• Valores ausentes: {info["missing"]}
+💾 Memória: {info["memory_mb"]} MB
 
-• Registros duplicados: {info["duplicates"]}
+❗ Valores ausentes: {info["missing"]}
 
-• Variáveis numéricas: {len(info["numeric_columns"])}
+📦 Duplicados: {info["duplicates"]}
 
-• Variáveis categóricas: {len(info["categorical_columns"])}
+🔢 Numéricas: {len(info["numeric_columns"])}
+
+🏷️ Categóricas: {len(info["categorical_columns"])}
 """
-
-    return texto
