@@ -12,6 +12,7 @@ from modules.comparison import compare
 from modules.executive_dashboard import executive_dashboard
 from database.database_manager import connect_database
 from modules.smart_dashboard import suggest_chart
+from modules.chat import show_chat
 
 PAGES = {
 
