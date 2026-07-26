@@ -11,34 +11,23 @@ from modules.autocharts import auto_chart
 from modules.comparison import compare
 from modules.executive_dashboard import executive_dashboard
 from database.database_manager import connect_database
-
+from modules.smart_dashboard import suggest_chart
 
 PAGES = {
 
     "Dashboard": show_dashboard,
-
     "Estatísticas": show_statistics,
-
     "Gráficos": show_graphics,
-
     "Gráfico Inteligente": auto_chart,
-
     "Correlação": show_correlation,
-
     "Outliers": show_outliers,
-
     "Qualidade": show_quality,
-
     "Insights": generate_insights,
-
     "Machine Learning": regression,
-
     "Comparar Arquivos": compare,
-
     "Exportar": show_export,
-
     "Dashboard Executivo": executive_dashboard,
-
     "Banco de Dados": connect_database,
+    "Dashboard Inteligente": suggest_chart,
 
 }
