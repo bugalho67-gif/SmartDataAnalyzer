@@ -1,22 +1,33 @@
 import streamlit as st
 
+from ai.context_builder import build_context
+from ai.local_client import LocalAIClient
 
-def show_chat():
+
+def show_chat(df):
 
     st.header("🤖 Assistente IA")
 
     pergunta = st.chat_input(
-        "Pergunte qualquer coisa..."
+        "Faça uma pergunta sobre seus dados..."
     )
 
-    if pergunta:
+    if not pergunta:
+        return
 
-        st.chat_message("user").write(
-            pergunta
-        )
+    contexto = build_context(df)
 
-        resposta = "Resposta da IA"
+    client = LocalAIClient()
 
-        st.chat_message("assistant").write(
-            resposta
-        )
+    resposta = client.ask(
+        pergunta,
+        contexto
+    )
+
+    with st.chat_message("user"):
+
+        st.write(pergunta)
+
+    with st.chat_message("assistant"):
+
+        st.write(resposta)
