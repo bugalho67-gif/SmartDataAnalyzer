@@ -9,6 +9,8 @@ from modules.export import show_export
 from modules.ml import regression
 from modules.autocharts import auto_chart
 from modules.comparison import compare
+from modules.executive_dashboard import executive_dashboard
+
 
 PAGES = {
 
@@ -32,6 +34,8 @@ PAGES = {
 
     "Comparar Arquivos": compare,
 
-    "Exportar": show_export
+    "Exportar": show_export,
+
+    "Dashboard Executivo": executive_dashboard
 
 }
