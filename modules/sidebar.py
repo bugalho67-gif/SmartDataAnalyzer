@@ -22,6 +22,7 @@ def create_sidebar():
            "Dashboard Executivo"
            "Banco de Dados"
            "Dashboard Inteligente"
+           "Assistente IA",
       ]
     )
 
