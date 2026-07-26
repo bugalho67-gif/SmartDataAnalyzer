@@ -21,6 +21,7 @@ def create_sidebar():
            "Exportar"
            "Dashboard Executivo"
            "Banco de Dados"
+           "Dashboard Inteligente"
       ]
     )
 
