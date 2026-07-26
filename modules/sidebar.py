@@ -10,15 +10,15 @@ def create_sidebar():
            "Dashboard",
            "Estatísticas",
            "Gráficos",
+           "Gráfico Inteligente",
            "Correlação",
            "Outliers",
            "Qualidade",
            "Insights",
+           "Machine Learning",
+           "Comparar Arquivos",
            "Relatório IA",
            "Exportar"
-           "Machine Learning",
-           "Gráfico Inteligente",
-           "Comparar Arquivos"
       ]
     )
 
