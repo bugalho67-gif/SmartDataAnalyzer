@@ -1,17 +1,17 @@
 import streamlit as st
 
 from config import APP_NAME
+
 from modules.loader import DataLoader
+from modules.cache import load_dataframe
+from modules.logger import logger
+
 from modules.sidebar import create_sidebar
-from modules.dashboard import show_dashboard
-from modules.statistics import show_statistics
-from modules.graphics import show_graphics
 from modules.filters import apply_filters
-from modules.correlation import show_correlation
-from modules.outliers import show_outliers
-from modules.quality import show_quality
-from modules.insights import generate_insights
-from modules.export import show_export
+from modules.search import search_dataframe
+from modules.ai import ai_summary
+from modules.router import PAGES
+
 
 st.set_page_config(
     page_title=APP_NAME,
@@ -23,6 +23,10 @@ menu = create_sidebar()
 
 st.title(APP_NAME)
 
+st.write(
+    "Faça o upload de um arquivo CSV, Excel ou JSON para iniciar a análise."
+)
+
 arquivo = st.file_uploader(
     "Selecione um arquivo",
     type=["csv", "xlsx", "json"]
@@ -31,42 +35,57 @@ arquivo = st.file_uploader(
 if arquivo:
 
     try:
-        # Carrega o arquivo
-        df = DataLoader.load(arquivo)
 
-        # Aplica filtros
+        with st.spinner("Processando arquivo..."):
+
+            df = load_dataframe(
+                DataLoader,
+                arquivo
+            )
+
+        logger.info(
+            f"Arquivo '{arquivo.name}' carregado."
+        )
+
+        progress = st.progress(0)
+
+        for i in range(100):
+            progress.progress(i + 1)
+
+        progress.empty()
+
         df = apply_filters(df)
 
-        # Navegação entre os módulos
-        if menu == "Dashboard":
-            show_dashboard(df)
+        df = search_dataframe(df)
 
-        elif menu == "Estatísticas":
-            show_statistics(df)
+        if menu == "Relatório IA":
 
-        elif menu == "Gráficos":
-            show_graphics(df)
+            st.subheader("🤖 Relatório Inteligente")
 
-        elif menu == "Correlação":
-            show_correlation(df)
+            st.write(
+                ai_summary(df)
+            )
 
-        elif menu == "Outliers":
-            show_outliers(df)
+        elif menu in PAGES:
 
-        elif menu == "Qualidade":
-            show_quality(df)
-
-        elif menu == "Insights":
-            generate_insights(df)
-
-        elif menu == "Exportar":
-            show_export(df)
+            PAGES[menu](df)
 
         else:
-            st.info(f"O módulo '{menu}' será implementado nas próximas etapas.")
+
+            st.warning(
+                "Módulo ainda não implementado."
+            )
 
     except Exception as erro:
-        st.error(f"Erro ao carregar o arquivo: {erro}")
+
+        logger.exception("Erro durante o processamento do arquivo.")
+
+        st.error(
+            f"Erro ao carregar o arquivo:\n\n{erro}"
+        )
 
 else:
-    st.info("📁 Faça o upload de um arquivo CSV, Excel ou JSON para começar.")
+
+    st.info(
+        "📁 Faça o upload de um arquivo para começar."
+    )
