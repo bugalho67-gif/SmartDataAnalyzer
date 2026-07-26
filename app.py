@@ -7,6 +7,10 @@ from modules.dashboard import show_dashboard
 from modules.statistics import show_statistics
 from modules.graphics import show_graphics
 from modules.filters import apply_filters
+from modules.correlation import show_correlation
+from modules.outliers import show_outliers
+from modules.quality import show_quality
+from modules.insights import generate_insights
 
 st.set_page_config(
     page_title=APP_NAME,
@@ -41,6 +45,18 @@ if arquivo:
 
         elif menu == "Gráficos":
             show_graphics(df)
+
+        elif menu == "Correlação":
+            show_correlation(df)
+
+        elif menu == "Outliers":
+            show_outliers(df)
+
+        elif menu == "Qualidade":
+            show_quality(df)
+
+        elif menu == "Insights":
+            generate_insights(df)
 
         else:
             st.info(f"O módulo '{menu}' será implementado nas próximas etapas.")
