@@ -30,5 +30,6 @@ PAGES = {
     "Dashboard Executivo": executive_dashboard,
     "Banco de Dados": connect_database,
     "Dashboard Inteligente": suggest_chart,
+    "Assistente IA": show_chat,
 
 }
