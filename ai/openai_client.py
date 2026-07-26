@@ -1,9 +1,21 @@
+from __future__ import annotations
+
 from ai.ai_client import AIClient
 
 
 class OpenAIClient(AIClient):
 
-    def __init__(self, api_key: str):
+    """
+    Cliente OpenAI.
+
+    A implementação ficará pronta
+    quando a API for configurada.
+    """
+
+    def __init__(
+        self,
+        api_key: str
+    ):
 
         self.api_key = api_key
 
@@ -13,9 +25,6 @@ class OpenAIClient(AIClient):
         context: str
     ) -> str:
 
-        # Aqui ficará a integração
-        # com a API futuramente.
-
         raise NotImplementedError(
-            "Integração com OpenAI ainda não implementada."
+            "Integração OpenAI ainda não implementada."
         )
