@@ -1,6 +1,12 @@
 import streamlit as st
 
-from config import APP_NAME
+
+from config import (
+    APP_NAME,
+    SUPPORTED_FILES,
+    MAX_UPLOAD_SIZE_MB
+)
+
 
 from modules.sidebar import create_sidebar
 
@@ -21,6 +27,7 @@ from modules.progress import (
 from modules.error_handler import show_error
 
 
+
 st.set_page_config(
 
     page_title=APP_NAME,
@@ -31,25 +38,24 @@ st.set_page_config(
 
 )
 
+
+
 menu = create_sidebar()
 
+
 st.title(APP_NAME)
+
+
 
 arquivo = st.file_uploader(
 
     "Selecione um arquivo",
 
-    type=[
-
-        "csv",
-
-        "xlsx",
-
-        "json"
-
-    ]
+    type=SUPPORTED_FILES
 
 )
+
+
 
 # -------------------------------
 # Banco de Dados
@@ -64,6 +70,8 @@ if menu == "Banco de Dados":
 
     st.stop()
 
+
+
 # -------------------------------
 # Upload
 # -------------------------------
@@ -71,52 +79,82 @@ if menu == "Banco de Dados":
 if arquivo is None:
 
     st.info(
-
         "Faça o upload de um arquivo."
-
     )
 
     st.stop()
+
+
+
+# Validação de tamanho
+
+tamanho_mb = arquivo.size / (1024 * 1024)
+
+
+if tamanho_mb > MAX_UPLOAD_SIZE_MB:
+
+    st.error(
+        f"O arquivo excede o limite de {MAX_UPLOAD_SIZE_MB} MB."
+    )
+
+    st.stop()
+
+
 
 try:
 
     progress = show_progress()
 
+
+
     df = process_uploaded_file(
         arquivo
     )
+
 
     update_progress(
         progress,
         40
     )
 
+
+
     df = apply_filters(
         df
     )
+
 
     update_progress(
         progress,
         70
     )
 
+
+
     df = search_dataframe(
         df
     )
+
 
     update_progress(
         progress,
         90
     )
 
+
+
     render_page(
         menu,
         df
     )
 
+
+
     finish_progress(
         progress
     )
+
+
 
 except Exception as erro:
 
