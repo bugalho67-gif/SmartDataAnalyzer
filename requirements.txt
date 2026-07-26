@@ -13,3 +13,7 @@ reportlab>=4.2.0
 joblib
 scikit-learn
 plotly
+sqlalchemy
+psycopg2-binary
+pymysql
+pyodbc
