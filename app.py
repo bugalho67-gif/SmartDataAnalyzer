@@ -32,60 +32,93 @@ arquivo = st.file_uploader(
     type=["csv", "xlsx", "json"]
 )
 
-if arquivo:
+# -------------------------------------------------------
+# Páginas que NÃO precisam de DataFrame
+# -------------------------------------------------------
 
-    try:
+if menu == "Banco de Dados":
 
-        with st.spinner("Processando arquivo..."):
+    PAGES[menu]()
 
-            df = load_dataframe(
-                DataLoader,
-                arquivo
-            )
+    st.stop()
 
-        logger.info(
-            f"Arquivo '{arquivo.name}' carregado."
-        )
+# -------------------------------------------------------
+# Upload obrigatório para as demais páginas
+# -------------------------------------------------------
 
-        progress = st.progress(0)
-
-        for i in range(100):
-            progress.progress(i + 1)
-
-        progress.empty()
-
-        df = apply_filters(df)
-
-        df = search_dataframe(df)
-
-        if menu == "Relatório IA":
-
-            st.subheader("🤖 Relatório Inteligente")
-
-            st.write(
-                ai_summary(df)
-            )
-
-        elif menu in PAGES:
-
-            PAGES[menu](df)
-
-        else:
-
-            st.warning(
-                "Módulo ainda não implementado."
-            )
-
-    except Exception as erro:
-
-        logger.exception("Erro durante o processamento do arquivo.")
-
-        st.error(
-            f"Erro ao carregar o arquivo:\n\n{erro}"
-        )
-
-else:
+if not arquivo:
 
     st.info(
         "📁 Faça o upload de um arquivo para começar."
+    )
+
+    st.stop()
+
+# -------------------------------------------------------
+# Processamento
+# -------------------------------------------------------
+
+try:
+
+    with st.spinner("Processando arquivo..."):
+
+        df = load_dataframe(
+            DataLoader,
+            arquivo
+        )
+
+    logger.info(
+        f"Arquivo '{arquivo.name}' carregado."
+    )
+
+    progress = st.progress(0)
+
+    for i in range(100):
+
+        progress.progress(i + 1)
+
+    progress.empty()
+
+    # ------------------------
+    # Filtros
+    # ------------------------
+
+    df = apply_filters(df)
+
+    df = search_dataframe(df)
+
+    # ------------------------
+    # Relatório IA
+    # ------------------------
+
+    if menu == "Relatório IA":
+
+        st.subheader("🤖 Relatório Inteligente")
+
+        st.write(
+            ai_summary(df)
+        )
+
+    # ------------------------
+    # Router
+    # ------------------------
+
+    elif menu in PAGES:
+
+        PAGES[menu](df)
+
+    else:
+
+        st.warning(
+            "Página não encontrada."
+        )
+
+except Exception as erro:
+
+    logger.exception(
+        "Erro durante o processamento do arquivo."
+    )
+
+    st.error(
+        f"Erro ao carregar o arquivo:\n\n{erro}"
     )
