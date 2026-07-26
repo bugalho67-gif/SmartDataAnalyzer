@@ -2,123 +2,124 @@ import streamlit as st
 
 from config import APP_NAME
 
-from modules.loader import DataLoader
-from modules.cache import load_dataframe
-from modules.logger import logger
-
 from modules.sidebar import create_sidebar
+
 from modules.filters import apply_filters
+
 from modules.search import search_dataframe
-from modules.ai import ai_summary
-from modules.router import PAGES
+
+from modules.file_handler import process_uploaded_file
+
+from modules.page_controller import render_page
+
+from modules.progress import (
+    show_progress,
+    update_progress,
+    finish_progress
+)
+
+from modules.error_handler import show_error
 
 
 st.set_page_config(
+
     page_title=APP_NAME,
+
     page_icon="📊",
+
     layout="wide"
+
 )
 
 menu = create_sidebar()
 
 st.title(APP_NAME)
 
-st.write(
-    "Faça o upload de um arquivo CSV, Excel ou JSON para iniciar a análise."
-)
-
 arquivo = st.file_uploader(
+
     "Selecione um arquivo",
-    type=["csv", "xlsx", "json"]
+
+    type=[
+
+        "csv",
+
+        "xlsx",
+
+        "json"
+
+    ]
+
 )
 
-# -------------------------------------------------------
-# Páginas que NÃO precisam de DataFrame
-# -------------------------------------------------------
+# -------------------------------
+# Banco de Dados
+# -------------------------------
 
 if menu == "Banco de Dados":
 
-    PAGES[menu]()
-
-    st.stop()
-
-# -------------------------------------------------------
-# Upload obrigatório para as demais páginas
-# -------------------------------------------------------
-
-if not arquivo:
-
-    st.info(
-        "📁 Faça o upload de um arquivo para começar."
+    render_page(
+        menu,
+        None
     )
 
     st.stop()
 
-# -------------------------------------------------------
-# Processamento
-# -------------------------------------------------------
+# -------------------------------
+# Upload
+# -------------------------------
+
+if arquivo is None:
+
+    st.info(
+
+        "Faça o upload de um arquivo."
+
+    )
+
+    st.stop()
 
 try:
 
-    with st.spinner("Processando arquivo..."):
+    progress = show_progress()
 
-        df = load_dataframe(
-            DataLoader,
-            arquivo
-        )
-
-    logger.info(
-        f"Arquivo '{arquivo.name}' carregado."
+    df = process_uploaded_file(
+        arquivo
     )
 
-    progress = st.progress(0)
+    update_progress(
+        progress,
+        40
+    )
 
-    for i in range(100):
+    df = apply_filters(
+        df
+    )
 
-        progress.progress(i + 1)
+    update_progress(
+        progress,
+        70
+    )
 
-    progress.empty()
+    df = search_dataframe(
+        df
+    )
 
-    # ------------------------
-    # Filtros
-    # ------------------------
+    update_progress(
+        progress,
+        90
+    )
 
-    df = apply_filters(df)
+    render_page(
+        menu,
+        df
+    )
 
-    df = search_dataframe(df)
-
-    # ------------------------
-    # Relatório IA
-    # ------------------------
-
-    if menu == "Relatório IA":
-
-        st.subheader("🤖 Relatório Inteligente")
-
-        st.write(
-            ai_summary(df)
-        )
-
-    # ------------------------
-    # Router
-    # ------------------------
-
-    elif menu in PAGES:
-
-        PAGES[menu](df)
-
-    else:
-
-        st.warning(
-            "Página não encontrada."
-        )
+    finish_progress(
+        progress
+    )
 
 except Exception as erro:
 
-    logger.exception(
-        "Erro durante o processamento do arquivo."
-    )
-
-    st.error(
-        f"Erro ao carregar o arquivo:\n\n{erro}"
+    show_error(
+        erro
     )
