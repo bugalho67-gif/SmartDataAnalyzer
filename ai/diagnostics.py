@@ -6,81 +6,308 @@ import numpy as np
 
 def analyze_dataframe(df: pd.DataFrame) -> dict:
     """
-    Analisa um DataFrame e retorna um dicionário
-    com informações utilizadas pelos módulos de IA.
+    Analisa completamente um DataFrame e retorna todas
+    as informações utilizadas pelo restante da aplicação.
+
+    Returns
+    -------
+    dict
+        Dicionário contendo estatísticas, métricas e
+        recomendações.
     """
 
-    numericas = df.select_dtypes(include=np.number)
-    categoricas = df.select_dtypes(
-        include=["object", "category", "bool"]
+    resultado = {}
+
+    # ======================================================
+    # Informações gerais
+    # ======================================================
+
+    resultado["rows"] = len(df)
+
+    resultado["columns"] = len(df.columns)
+
+    resultado["column_names"] = list(df.columns)
+
+    resultado["shape"] = df.shape
+
+    resultado["memory_mb"] = round(
+        df.memory_usage(deep=True).sum() / 1024**2,
+        2
     )
 
-    resultado = {
-        "rows": len(df),
-        "columns": len(df.columns),
-        "column_names": list(df.columns),
-        "missing": int(df.isnull().sum().sum()),
-        "duplicates": int(df.duplicated().sum()),
-        "numeric_columns": list(numericas.columns),
-        "categorical_columns": list(categoricas.columns),
-        "numeric_summary": {},
-        "categorical_summary": {},
-        "recommendations": [],
-    }
+    # ======================================================
+    # Qualidade
+    # ======================================================
 
-    # -----------------------------
-    # Estatísticas numéricas
-    # -----------------------------
+    resultado["missing"] = int(
+        df.isna().sum().sum()
+    )
 
-    for coluna in numericas.columns:
+    resultado["duplicates"] = int(
+        df.duplicated().sum()
+    )
 
-        resultado["numeric_summary"][coluna] = {
-            "mean": float(numericas[coluna].mean()),
-            "median": float(numericas[coluna].median()),
-            "std": float(numericas[coluna].std()),
-            "min": float(numericas[coluna].min()),
-            "max": float(numericas[coluna].max()),
+    resultado["missing_per_column"] = (
+        df.isna()
+        .sum()
+        .sort_values(ascending=False)
+        .to_dict()
+    )
+
+    # ======================================================
+    # Tipos
+    # ======================================================
+
+    numericas = list(
+        df.select_dtypes(
+            include=np.number
+        ).columns
+    )
+
+    booleanas = list(
+        df.select_dtypes(
+            include="bool"
+        ).columns
+    )
+
+    datas = list(
+        df.select_dtypes(
+            include="datetime"
+        ).columns
+    )
+
+    categoricas = [
+
+        c
+
+        for c in df.columns
+
+        if c not in numericas
+        and c not in booleanas
+        and c not in datas
+
+    ]
+
+    resultado["numeric_columns"] = numericas
+
+    resultado["boolean_columns"] = booleanas
+
+    resultado["datetime_columns"] = datas
+
+    resultado["categorical_columns"] = categoricas
+
+    # ======================================================
+    # Estatísticas Numéricas
+    # ======================================================
+
+    numeric_summary = {}
+
+    for coluna in numericas:
+
+        serie = df[coluna].dropna()
+
+        if serie.empty:
+
+            continue
+
+        numeric_summary[coluna] = {
+
+            "count": int(serie.count()),
+
+            "mean": float(serie.mean()),
+
+            "median": float(serie.median()),
+
+            "std": float(
+                serie.std()
+            ) if len(serie) > 1 else 0,
+
+            "min": float(serie.min()),
+
+            "max": float(serie.max()),
+
+            "q1": float(
+                serie.quantile(.25)
+            ),
+
+            "q3": float(
+                serie.quantile(.75)
+            ),
+
+            "variance": float(
+                serie.var()
+            ) if len(serie) > 1 else 0,
+
+            "skew": float(
+                serie.skew()
+            ) if len(serie) > 2 else 0,
+
+            "kurtosis": float(
+                serie.kurtosis()
+            ) if len(serie) > 3 else 0,
+
         }
 
-    # -----------------------------
-    # Estatísticas categóricas
-    # -----------------------------
+    resultado["numeric_summary"] = numeric_summary
 
-    for coluna in categoricas.columns:
+    # ======================================================
+    # Estatísticas Categóricas
+    # ======================================================
 
-        moda = categoricas[coluna].mode()
+    categorical_summary = {}
 
-        resultado["categorical_summary"][coluna] = {
-            "unique": int(categoricas[coluna].nunique()),
-            "most_common": (
+    for coluna in categoricas:
+
+        serie = df[coluna]
+
+        moda = serie.mode()
+
+        categorical_summary[coluna] = {
+
+            "unique": int(
+                serie.nunique(dropna=True)
+            ),
+
+            "missing": int(
+                serie.isna().sum()
+            ),
+
+            "top": (
+
                 str(moda.iloc[0])
-                if len(moda) > 0
-                else "N/A"
+
+                if not moda.empty
+
+                else None
+
+            ),
+
+            "frequency": (
+
+                int(
+                    serie.value_counts(
+                        dropna=False
+                    ).iloc[0]
+                )
+
+                if len(serie) > 0
+
+                else 0
+
             )
+
         }
 
-    # -----------------------------
+    resultado["categorical_summary"] = categorical_summary
+
+    # ======================================================
+    # Correlação
+    # ======================================================
+
+    if len(numericas) >= 2:
+
+        resultado["correlation"] = (
+
+            df[numericas]
+
+            .corr(numeric_only=True)
+
+            .round(3)
+
+        )
+
+    else:
+
+        resultado["correlation"] = None
+
+    # ======================================================
+    # Outliers (IQR)
+    # ======================================================
+
+    outliers = {}
+
+    for coluna in numericas:
+
+        serie = df[coluna].dropna()
+
+        if serie.empty:
+
+            continue
+
+        q1 = serie.quantile(.25)
+
+        q3 = serie.quantile(.75)
+
+        iqr = q3 - q1
+
+        inferior = q1 - 1.5 * iqr
+
+        superior = q3 + 1.5 * iqr
+
+        quantidade = int(
+
+            (
+
+                (serie < inferior)
+
+                |
+
+                (serie > superior)
+
+            ).sum()
+
+        )
+
+        outliers[coluna] = quantidade
+
+    resultado["outliers"] = outliers
+
+    # ======================================================
     # Recomendações
-    # -----------------------------
+    # ======================================================
+
+    recomendacoes = []
 
     if resultado["missing"] > 0:
-        resultado["recommendations"].append(
-            "Existem valores ausentes que podem afetar a análise."
+
+        recomendacoes.append(
+            "Existem valores ausentes que podem afetar as análises."
         )
 
     if resultado["duplicates"] > 0:
-        resultado["recommendations"].append(
-            "Existem registros duplicados."
+
+        recomendacoes.append(
+            "Foram encontrados registros duplicados."
         )
 
-    if len(resultado["numeric_columns"]) == 0:
-        resultado["recommendations"].append(
-            "Nenhuma variável numérica encontrada."
+    if len(numericas) == 0:
+
+        recomendacoes.append(
+            "Não existem colunas numéricas."
         )
 
-    if len(resultado["categorical_columns"]) == 0:
-        resultado["recommendations"].append(
-            "Nenhuma variável categórica encontrada."
+    if len(categoricas) == 0:
+
+        recomendacoes.append(
+            "Não existem colunas categóricas."
         )
+
+    if resultado["memory_mb"] > 300:
+
+        recomendacoes.append(
+            "Dataset grande. Considere utilizar cache."
+        )
+
+    for coluna, qtd in outliers.items():
+
+        if qtd > 0:
+
+            recomendacoes.append(
+
+                f"{coluna} possui {qtd} possíveis outliers."
+
+            )
+
+    resultado["recommendations"] = recomendacoes
 
     return resultado
