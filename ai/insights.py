@@ -1,66 +1,72 @@
-import pandas as pd
-import numpy as np
+from ai.diagnostics import analyze_dataframe
 
 
-def insights(df: pd.DataFrame) -> list[str]:
-    """
-    Gera insights automáticos sobre o DataFrame.
-    """
+def insights(df):
+
+    info = analyze_dataframe(df)
 
     texto = []
 
-    # Informações gerais
-    texto.append(f"📄 A base possui {len(df):,} registros.")
-    texto.append(f"📊 Foram encontradas {len(df.columns)} colunas.")
+    texto.append(
+        f"📄 A base possui {info['rows']:,} registros."
+    )
 
-    # Valores ausentes
-    nulos = int(df.isnull().sum().sum())
+    texto.append(
+        f"📊 Existem {info['columns']} colunas."
+    )
 
-    if nulos == 0:
-        texto.append("✅ Não foram encontrados valores ausentes.")
-    else:
-        texto.append(f"⚠️ Foram encontrados {nulos:,} valores ausentes.")
+    texto.append(
+        f"🔢 Foram identificadas {len(info['numeric_columns'])} colunas numéricas."
+    )
 
-    # Duplicados
-    duplicados = int(df.duplicated().sum())
+    texto.append(
+        f"🏷️ Foram identificadas {len(info['categorical_columns'])} colunas categóricas."
+    )
 
-    if duplicados == 0:
-        texto.append("✅ Não existem registros duplicados.")
-    else:
-        texto.append(f"⚠️ Existem {duplicados:,} registros duplicados.")
-
-    # Numéricas
-    numericas = df.select_dtypes(include=np.number)
-
-    if not numericas.empty:
+    if info["missing"] == 0:
 
         texto.append(
-            f"🔢 Existem {len(numericas.columns)} variáveis numéricas."
+            "✅ Não existem valores ausentes."
         )
 
-        for coluna in numericas.columns:
-
-            texto.append(
-                f"• {coluna}: média = {numericas[coluna].mean():.2f}"
-            )
-
-    # Categóricas
-    categoricas = df.select_dtypes(include=["object", "category", "bool"])
-
-    if not categoricas.empty:
+    else:
 
         texto.append(
-            f"🏷️ Existem {len(categoricas.columns)} variáveis categóricas."
+            f"⚠️ Existem {info['missing']:,} valores ausentes."
         )
 
-        for coluna in categoricas.columns:
+    if info["duplicates"] == 0:
 
-            moda = categoricas[coluna].mode()
+        texto.append(
+            "✅ Não existem registros duplicados."
+        )
 
-            if len(moda) > 0:
+    else:
 
-                texto.append(
-                    f"• {coluna}: valor mais frequente = {moda.iloc[0]}"
-                )
+        texto.append(
+            f"⚠️ Existem {info['duplicates']:,} registros duplicados."
+        )
+
+    texto.append("")
+
+    texto.append("### Estatísticas Numéricas")
+
+    for coluna, dados in info["numeric_summary"].items():
+
+        texto.append(
+            f"• **{coluna}**"
+        )
+
+        texto.append(
+            f"  Média: {dados['mean']:.2f}"
+        )
+
+        texto.append(
+            f"  Mediana: {dados['median']:.2f}"
+        )
+
+        texto.append(
+            f"  Desvio Padrão: {dados['std']:.2f}"
+        )
 
     return texto
