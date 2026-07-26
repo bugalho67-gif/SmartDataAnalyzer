@@ -19,6 +19,7 @@ def create_sidebar():
            "Comparar Arquivos",
            "Relatório IA",
            "Exportar"
+           "Dashboard Executivo"
       ]
     )
 
