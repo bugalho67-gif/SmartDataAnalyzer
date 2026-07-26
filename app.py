@@ -11,6 +11,7 @@ from modules.correlation import show_correlation
 from modules.outliers import show_outliers
 from modules.quality import show_quality
 from modules.insights import generate_insights
+from modules.export import show_export
 
 st.set_page_config(
     page_title=APP_NAME,
