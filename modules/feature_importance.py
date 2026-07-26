@@ -1,6 +1,6 @@
 import streamlit as st
-import plotly.express as px
 import pandas as pd
+import plotly.express as px
 
 
 def show_importance(modelo, X):
@@ -14,7 +14,7 @@ def show_importance(modelo, X):
     })
 
     importancia = importancia.sort_values(
-        "Importância",
+        by="Importância",
         ascending=False
     )
 
@@ -23,10 +23,21 @@ def show_importance(modelo, X):
         x="Importância",
         y="Variável",
         orientation="h",
+        text_auto=".3f",
         title="Importância das Variáveis"
+    )
+
+    fig.update_layout(
+        yaxis=dict(categoryorder="total ascending")
     )
 
     st.plotly_chart(
         fig,
         use_container_width=True
+    )
+
+    st.dataframe(
+        importancia,
+        use_container_width=True,
+        hide_index=True
     )
