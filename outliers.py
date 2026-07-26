@@ -31,8 +31,8 @@ def show_outliers(df: pd.DataFrame):
 
     if metodo == "IQR":
 
-        q1 = serie.quantile(.25)
-        q3 = serie.quantile(.75)
+        q1 = serie.quantile(0.25)
+        q3 = serie.quantile(0.75)
 
         iqr = q3 - q1
 
@@ -46,12 +46,17 @@ def show_outliers(df: pd.DataFrame):
 
     else:
 
-        z = np.abs(
-            (serie - serie.mean()) /
-            serie.std()
-        )
+        if serie.std() == 0:
+            st.warning(
+                "Não é possível calcular o Z-Score porque todos os valores da coluna são iguais."
+            )
+            return
 
-        outliers = df.loc[z > 3]
+        z = ((serie - serie.mean()) / serie.std()).abs()
+
+        indices = z[z > 3].index
+
+        outliers = df.loc[indices]
 
     st.metric(
         "Outliers encontrados",
