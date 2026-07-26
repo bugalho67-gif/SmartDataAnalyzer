@@ -6,17 +6,17 @@ def create_sidebar():
 
     menu = st.sidebar.radio(
         "Navegação",
-        [
-            "Dashboard",
-            "Estatísticas",
-            "Gráficos",
-            "Correlação",
-            "Outliers",
-            "Valores Nulos",
-            "Duplicados",
-            "Relatório IA",
-            "Exportar"
-        ]
+       [
+           "Dashboard",
+           "Estatísticas",
+           "Gráficos",
+           "Correlação",
+           "Outliers",
+           "Qualidade",
+           "Insights",
+           "Relatório IA",
+           "Exportar"
+      ]
     )
 
     st.sidebar.divider()
