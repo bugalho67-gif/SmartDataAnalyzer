@@ -10,6 +10,7 @@ from modules.ml import regression
 from modules.autocharts import auto_chart
 from modules.comparison import compare
 from modules.executive_dashboard import executive_dashboard
+from database.database_manager import connect_database
 
 
 PAGES = {
@@ -36,6 +37,8 @@ PAGES = {
 
     "Exportar": show_export,
 
-    "Dashboard Executivo": executive_dashboard
+    "Dashboard Executivo": executive_dashboard,
+
+    "Banco de Dados": connect_database,
 
 }
