@@ -59,6 +59,9 @@ if arquivo:
         elif menu == "Insights":
             generate_insights(df)
 
+        elif menu == "Exportar":
+            show_export(df)
+
         else:
             st.info(f"O módulo '{menu}' será implementado nas próximas etapas.")
 
