@@ -16,6 +16,9 @@ def create_sidebar():
            "Insights",
            "Relatório IA",
            "Exportar"
+           "Machine Learning",
+           "Gráfico Inteligente",
+           "Comparar Arquivos"
       ]
     )
 
