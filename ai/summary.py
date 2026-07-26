@@ -1,26 +1,24 @@
-import pandas as pd
+from ai.diagnostics import analyze_dataframe
 
 
 def summarize(df):
 
+    info = analyze_dataframe(df)
+
     texto = f"""
+## Resumo da Base
 
-    A base possui
+• Registros: {info["rows"]}
 
-    {len(df)} registros.
+• Colunas: {info["columns"]}
 
-    Existem
+• Valores ausentes: {info["missing"]}
 
-    {len(df.columns)}
+• Registros duplicados: {info["duplicates"]}
 
-    colunas.
+• Variáveis numéricas: {len(info["numeric_columns"])}
 
-    Foram encontrados
-
-    {df.isnull().sum().sum()}
-
-    valores ausentes.
-
-    """
+• Variáveis categóricas: {len(info["categorical_columns"])}
+"""
 
     return texto
