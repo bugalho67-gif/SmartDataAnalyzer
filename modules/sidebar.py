@@ -20,6 +20,7 @@ def create_sidebar():
            "Relatório IA",
            "Exportar"
            "Dashboard Executivo"
+           "Banco de Dados"
       ]
     )
 
