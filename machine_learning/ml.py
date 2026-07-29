@@ -27,8 +27,8 @@ from sklearn.metrics import (
     classification_report,
 )
 
-from modules.feature_importance import show_importance
-from modules.model_manager import save_model
+from machine_learning.feature_importance import show_importance
+from machine_learning.model_manager import save_model
 
 
 # ======================================================
