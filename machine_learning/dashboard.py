@@ -1,5 +1,5 @@
 import streamlit as st
-from modules.overview import overview
+from machine_learning.overview import overview
 
 
 def show_dashboard(df):
