@@ -1,13 +1,13 @@
-from modules.dashboard import show_dashboard
-from modules.statistics import show_statistics
-from modules.graphics import show_graphics
-from modules.correlation import show_correlation
-from modules.outliers import show_outliers
-from modules.quality import show_quality
-from modules.insights import generate_insights
-from modules.export import show_export
-from modules.chat import show_chat
-from modules.smart_dashboard import suggest_chart
+from machine_learning.dashboard import show_dashboard
+from machine_learning.statistics import show_statistics
+from machine_learning.graphics import show_graphics
+from machine_learning.correlation import show_correlation
+from machine_learning.outliers import show_outliers
+from machine_learning.quality import show_quality
+from machine_learning.insights import generate_insights
+from machine_learning.export import show_export
+from machine_learning.chat import show_chat
+from machine_learning.smart_dashboard import suggest_chart
 from database.database_manager import connect_database
 
 
