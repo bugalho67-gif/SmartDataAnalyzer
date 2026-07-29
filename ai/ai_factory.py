@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import os
 
-from ai.providers.base import BaseProvider
-from ai.providers.local import LocalProvider
+from providers.base import BaseProvider
+from providers.local import LocalProvider
 
 # Descomente quando implementar os provedores
 #
-# from ai.providers.openai_provider import OpenAIProvider
-# from ai.providers.gemini_provider import GeminiProvider
-# from ai.providers.ollama_provider import OllamaProvider
+# from providers.openai_provider import OpenAIProvider
+# from providers.gemini_provider import GeminiProvider
+# from providers.ollama_provider import OllamaProvider
 
 
 class AIProviderFactory:
