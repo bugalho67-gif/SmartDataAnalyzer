@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-from modules.loader import DataLoader
+from machine_learning.loader import DataLoader
 
 
 def compare(df: pd.DataFrame):
