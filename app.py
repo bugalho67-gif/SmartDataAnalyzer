@@ -8,23 +8,23 @@ from config import (
 )
 
 
-from modules.sidebar import create_sidebar
+from machine_learning.sidebar import create_sidebar
 
-from modules.filters import apply_filters
+from machine_learning.filters import apply_filters
 
-from modules.search import search_dataframe
+from machine_learning.search import search_dataframe
 
-from modules.file_handler import process_uploaded_file
+from machine_learning.file_handler import process_uploaded_file
 
-from modules.page_controller import render_page
+from machine_learning.page_controller import render_page
 
-from modules.progress import (
+from machine_learning.progress import (
     show_progress,
     update_progress,
     finish_progress
 )
 
-from modules.error_handler import show_error
+from core.exceptions import show_error
 
 
 
