@@ -1,6 +1,6 @@
 import streamlit as st
 
-from modules.logger import logger
+from core.logger import logger
 
 
 def show_error(error):
