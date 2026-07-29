@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from modules.report import generate_pdf
+from machine_learning.report import generate_pdf
 
 
 def show_export(df: pd.DataFrame):
