@@ -1,4 +1,4 @@
-from modules.loader import DataLoader
+from machine_learning.loader import DataLoader
 
 def test_loader():
 
