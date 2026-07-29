@@ -1,8 +1,8 @@
 import streamlit as st
 
-from modules.loader import DataLoader
-from modules.cache import load_dataframe
-from modules.logger import logger
+from machine_learning.loader import DataLoader
+from core.cache import load_dataframe
+from core.logger import logger
 
 
 def process_uploaded_file(arquivo):
