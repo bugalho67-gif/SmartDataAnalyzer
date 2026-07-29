@@ -38,7 +38,10 @@ def create_sidebar():
             "Banco de Dados"
 
         ]
-         st.sidebar.divider()
+
+    )
+
+    st.sidebar.divider()
 
     st.sidebar.info(
         """
