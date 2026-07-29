@@ -1,8 +1,8 @@
 import streamlit as st
 
-from modules.router import PAGES
+from machine_learning.router import PAGES
 
-from modules.ai import ai_summary
+from machine_learning.ai import ai_summary
 
 
 def render_page(
