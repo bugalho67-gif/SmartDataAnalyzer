@@ -1,36 +1,424 @@
-# 📊 Smart Data Analyzer
+# 📊 SmartDataAnalyzer
 
-Analisador automático de dados desenvolvido em Python com Streamlit.
+<p align="center">
 
-## Recursos
+<img src="docs/images/logo.png" width="180"/>
 
-- Upload de CSV
-- Upload de Excel
-- Upload de JSON
-- Dashboard
-- Estatísticas
-- Gráficos
+</p>
+
+<p align="center">
+
+![Python](https://img.shields.io/badge/Python-3.11+-blue?style=for-the-badge&logo=python)
+![Streamlit](https://img.shields.io/badge/Streamlit-Latest-red?style=for-the-badge&logo=streamlit)
+![Pandas](https://img.shields.io/badge/Pandas-2.x-blue?style=for-the-badge&logo=pandas)
+![Scikit Learn](https://img.shields.io/badge/Scikit--Learn-Latest-orange?style=for-the-badge&logo=scikit-learn)
+![Plotly](https://img.shields.io/badge/Plotly-Interactive-blueviolet?style=for-the-badge&logo=plotly)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+
+</p>
+
+---
+
+# 🚀 Sobre o projeto
+
+O **SmartDataAnalyzer** é uma plataforma inteligente para análise exploratória de dados (EDA), Machine Learning e geração automática de insights utilizando Inteligência Artificial.
+
+O objetivo do projeto é permitir que qualquer usuário envie um conjunto de dados (CSV, Excel ou JSON) e obtenha, em poucos segundos:
+
+- Dashboard automático;
+- Estatísticas descritivas;
+- Visualizações inteligentes;
+- Correlações;
+- Detecção de outliers;
+- Diagnóstico da qualidade dos dados;
+- Modelos de Machine Learning;
+- Relatórios em PDF;
+- Exportação dos resultados;
+- Insights automáticos gerados por IA.
+
+Tudo isso através de uma interface moderna, intuitiva e preparada para desktop e dispositivos móveis.
+
+---
+
+# ✨ Principais funcionalidades
+
+## 📂 Importação de dados
+
+- CSV
+- Excel (.xlsx)
+- JSON
+
+Em breve:
+
+- Parquet
+- SQL
+- XML
+- API REST
+
+---
+
+## 📈 Dashboard Automático
+
+Após o upload dos dados o sistema gera automaticamente:
+
+- Quantidade de registros
+- Quantidade de colunas
+- Valores nulos
+- Duplicados
+- Memória utilizada
+- Pré-visualização dos dados
+
+---
+
+## 📊 Visualizações Inteligentes
+
+Gráficos automáticos utilizando Plotly.
+
+Entre eles:
+
+- Histograma
+- Barras
+- Pizza
+- Linha
+- Dispersão
+- Boxplot
+- Heatmap
 - Correlação
-- Outliers
-- Relatórios
-- Exportação
 
-## Instalação
+Os gráficos são escolhidos automaticamente conforme o tipo da variável.
+
+---
+
+## 📉 Estatísticas
+
+Análise estatística completa.
+
+Incluindo:
+
+- Média
+- Mediana
+- Moda
+- Variância
+- Desvio padrão
+- Quartis
+- Percentis
+- Máximo
+- Mínimo
+
+---
+
+## 🚨 Detecção de Outliers
+
+Métodos disponíveis:
+
+- IQR
+- Z-Score
+
+Visualização através de BoxPlot.
+
+---
+
+## 🧹 Qualidade dos Dados
+
+Análise automática de:
+
+- Valores ausentes
+- Valores duplicados
+- Colunas constantes
+- Tipos incorretos
+- Cardinalidade
+- Distribuição
+
+---
+
+# 🤖 Inteligência Artificial
+
+O projeto possui uma arquitetura preparada para múltiplos provedores de IA.
+
+Atualmente:
+
+- Provider Local ✅
+
+Arquitetura preparada para:
+
+- OpenAI
+- Gemini
+- Claude
+- Ollama
+- Azure OpenAI
+
+A IA poderá responder perguntas sobre os dados, gerar diagnósticos automáticos e auxiliar na interpretação dos resultados.
+
+---
+
+# 🧠 Machine Learning
+
+O projeto inclui um módulo completo de Machine Learning.
+
+## Algoritmos
+
+- Regressão Linear
+- Decision Tree
+- Random Forest
+- Logistic Regression
+- KNN
+
+---
+
+## Avaliação
+
+- Accuracy
+- Precision
+- Recall
+- F1 Score
+- ROC Curve
+- Confusion Matrix
+
+---
+
+## AutoML
+
+Comparação automática entre modelos para selecionar o melhor algoritmo conforme o dataset.
+
+---
+
+## Feature Importance
+
+Visualização automática da importância das variáveis.
+
+---
+
+# 📄 Relatórios
+
+Exportação em:
+
+- PDF
+- CSV
+- Excel
+
+Em breve:
+
+- PowerPoint
+- HTML
+
+---
+
+# 🗄 Banco de Dados
+
+Suporte para:
+
+- SQLite ✅
+
+Arquitetura preparada para:
+
+- PostgreSQL
+- MySQL
+- SQL Server
+
+---
+
+# 🔒 Segurança
+
+O projeto foi desenvolvido considerando boas práticas de segurança.
+
+Recursos atuais:
+
+- Configuração centralizada
+- Variáveis de ambiente (.env)
+- Logging
+- Tratamento de exceções
+- Upload controlado
+
+Próximas implementações:
+
+- Criptografia
+- Anonimização de dados
+- Controle de acesso
+- Auditoria
+- Sessões seguras
+- LGPD
+- Rate Limiting
+
+---
+
+# 🏗 Arquitetura
+
+```
+SmartDataAnalyzer/
+
+├── ai/
+├── config/
+├── core/
+├── database/
+├── machine_learning/
+├── providers/
+├── tests/
+├── docs/
+├── app.py
+├── Dockerfile
+├── docker-compose.yml
+└── README.md
+```
+
+---
+
+# ⚙ Tecnologias
+
+- Python
+- Streamlit
+- Pandas
+- NumPy
+- Plotly
+- Scikit-Learn
+- ReportLab
+- SQLite
+- Docker
+
+---
+
+# 🚀 Instalação
+
+Clone o projeto.
+
+```bash
+git clone https://github.com/SEU-USUARIO/SmartDataAnalyzer.git
+```
+
+Entre na pasta.
+
+```bash
+cd SmartDataAnalyzer
+```
+
+Instale as dependências.
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Executar
+Execute.
 
 ```bash
 streamlit run app.py
 ```
 
-## Tecnologias
+---
 
-- Python
-- Pandas
-- Plotly
-- Streamlit
-- Matplotlib
+# 📸 Demonstração
+
+Em breve serão adicionados:
+
+- GIF do sistema
+- Screenshots
+- Vídeo de demonstração
+
+---
+
+# 📅 Roadmap
+
+## Q1 — Estrutura e Arquitetura
+
+- [x] Upload de arquivos
+- [x] Dashboard
+- [x] Estatísticas
+- [x] Gráficos
+- [x] Correlação
+- [x] Outliers
+- [x] Qualidade dos dados
+- [x] Machine Learning
+- [x] AutoML
+- [x] Exportação
+- [x] Banco de Dados
+- [x] Docker
+- [x] Configuração centralizada
+
+---
+
+## Q2 — Interface e Experiência
+
+- [ ] Design inspirado na Apple
+- [ ] Responsividade completa
+- [ ] Dark Mode
+- [ ] Animações suaves
+- [ ] Dashboard Premium
+- [ ] Assistente Inteligente
+
+---
+
+## Q3 — Segurança
+
+- [ ] Autenticação
+- [ ] Controle de usuários
+- [ ] Criptografia
+- [ ] LGPD
+- [ ] Auditoria
+- [ ] Backup automático
+
+---
+
+## Q4 — Inteligência Artificial
+
+- [ ] OpenAI
+- [ ] Gemini
+- [ ] Claude
+- [ ] Ollama
+- [ ] Chat Inteligente
+- [ ] Geração automática de dashboards
+- [ ] Explicação automática de gráficos
+
+---
+
+## Q5 — Deploy
+
+- [ ] Streamlit Cloud
+- [ ] Docker Hub
+- [ ] AWS
+- [ ] Azure
+- [ ] Google Cloud
+
+---
+
+# 📈 Situação do Projeto
+
+| Módulo | Status |
+|---------|--------|
+| Upload | ✅ |
+| Dashboard | ✅ |
+| Estatísticas | ✅ |
+| Gráficos | ✅ |
+| Correlação | ✅ |
+| Outliers | ✅ |
+| Qualidade | ✅ |
+| IA | 🚧 |
+| Machine Learning | ✅ |
+| Banco de Dados | ✅ |
+| Exportação | ✅ |
+| Docker | ✅ |
+| Segurança | 🚧 |
+
+---
+
+# 🤝 Contribuindo
+
+Contribuições são bem-vindas.
+
+Caso queira colaborar:
+
+1. Faça um Fork
+2. Crie uma branch
+3. Faça suas alterações
+4. Abra um Pull Request
+
+---
+
+# 📜 Licença
+
+Este projeto está licenciado sob a licença MIT.
+
+---
+
+# 👨‍💻 Autor
+
+**Gabriel de Lima Bugalho**
+
+Projeto desenvolvido como plataforma de análise inteligente de dados, unindo Data Analytics, Machine Learning e Inteligência Artificial, com foco em produtividade, arquitetura escalável e experiência moderna para analistas de dados.
