@@ -1,24 +1,38 @@
-import pandas as pd
-from pathlib import Path
+import streamlit as st
+
+from core.logger import logger
 
 
-class DataLoader:
+class DataLoadError(Exception):
+    """Erro ao carregar ou interpretar um arquivo de dados (CSV, Excel, JSON)."""
 
-    @staticmethod
-    def load(file):
 
-        extension = Path(file.name).suffix.lower()
+class AIError(Exception):
+    """Erro ao consultar um provedor de IA (local ou externo)."""
 
-        if extension == ".csv":
-            return pd.read_csv(file)
 
-        elif extension == ".xlsx":
-            return pd.read_excel(file)
+class ExportError(Exception):
+    """Erro ao gerar ou exportar um relatório (PDF, Excel, CSV, HTML)."""
 
-        elif extension == ".json":
-            return pd.read_json(file)
 
-        else:
-            raise ValueError(
-                f"Formato {extension} não suportado."
-            )
+class DatabaseError(Exception):
+    """Erro ao conectar ou consultar um banco de dados externo."""
+
+
+class ValidationError(Exception):
+    """Erro de validação de dados de entrada."""
+
+
+def show_error(error):
+
+    logger.exception(str(error))
+
+    st.error(
+        f"""
+
+Erro durante o processamento.
+
+{error}
+
+"""
+    )
