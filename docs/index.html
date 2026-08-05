@@ -1,808 +1,726 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Data Analyzer — Da planilha à decisão</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#0A0E1F;
-    --bg-elevated:#121832;
-    --bg-card:#141b3a;
-    --ink:#EEF1FA;
-    --ink-dim:#8B92B5;
-    --ink-faint:#565D80;
-    --cyan:#3EE6C9;
-    --violet:#9B87F5;
-    --amber:#FFB454;
-    --line: rgba(139,146,181,0.16);
-    --line-strong: rgba(139,146,181,0.28);
-    --display: 'Space Grotesk', sans-serif;
-    --body: 'IBM Plex Sans', sans-serif;
-    --mono: 'IBM Plex Mono', monospace;
-  }
-
-  *{ margin:0; padding:0; box-sizing:border-box; }
-
-  html{ scroll-behavior:smooth; }
-
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:var(--body);
-    line-height:1.6;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
-
-  a{ color:inherit; text-decoration:none; }
-
-  ::selection{ background:var(--violet); color:var(--bg); }
-
-  :focus-visible{
-    outline:2px solid var(--cyan);
-    outline-offset:3px;
-    border-radius:2px;
-  }
-
-  .wrap{
-    max-width:1180px;
-    margin:0 auto;
-    padding:0 32px;
-  }
-
-  .eyebrow{
-    font-family:var(--mono);
-    font-size:0.78rem;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    color:var(--cyan);
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-bottom:18px;
-  }
-
-  .eyebrow::before{
-    content:'';
-    width:7px; height:7px;
-    border-radius:50%;
-    background:var(--cyan);
-    box-shadow:0 0 10px var(--cyan);
-    flex-shrink:0;
-  }
-
-  h1,h2,h3{
-    font-family:var(--display);
-    font-weight:600;
-    letter-spacing:-0.01em;
-    line-height:1.08;
-  }
-
-  /* ---------- NAV ---------- */
-
-  nav{
-    position:fixed;
-    top:0; left:0; right:0;
-    z-index:100;
-    background:rgba(10,14,31,0.72);
-    backdrop-filter:blur(14px);
-    border-bottom:1px solid var(--line);
-  }
-
-  .nav-inner{
-    max-width:1180px;
-    margin:0 auto;
-    padding:18px 32px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-  }
-
-  .logo{
-    font-family:var(--display);
-    font-weight:600;
-    font-size:1.02rem;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    letter-spacing:-0.01em;
-  }
-
-  .logo-dot{
-    width:9px; height:9px;
-    border-radius:50%;
-    background:var(--cyan);
-    box-shadow:0 0 12px var(--cyan);
-  }
-
-  .nav-links{
-    display:flex;
-    gap:36px;
-    font-size:0.92rem;
-    color:var(--ink-dim);
-  }
-
-  .nav-links a{ transition:color .2s ease; }
-  .nav-links a:hover{ color:var(--ink); }
-
-  .btn{
-    font-family:var(--body);
-    font-size:0.9rem;
-    font-weight:500;
-    padding:10px 20px;
-    border-radius:8px;
-    border:1px solid var(--line-strong);
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    transition:all .2s ease;
-    cursor:pointer;
-    background:transparent;
-    color:var(--ink);
-  }
-
-  .btn:hover{ border-color:var(--cyan); background:rgba(62,230,201,0.06); }
-
-  .btn-primary{
-    background:var(--cyan);
-    color:#052620;
-    border-color:var(--cyan);
-    font-weight:600;
-  }
-
-  .btn-primary:hover{
-    background:#5AF0D5;
-    box-shadow:0 0 24px rgba(62,230,201,0.35);
-  }
-
-  @media (max-width:760px){
-    .nav-links{ display:none; }
-  }
-
-  /* ---------- HERO ---------- */
-
-  .hero{
-    position:relative;
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    padding-top:80px;
-    overflow:hidden;
-  }
-
-  #network{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    z-index:0;
-  }
-
-  .hero::after{
-    content:'';
-    position:absolute;
-    inset:0;
-    background:radial-gradient(ellipse 70% 60% at 50% 40%, transparent 0%, var(--bg) 92%);
-    pointer-events:none;
-    z-index:1;
-  }
-
-  .hero-content{
-    position:relative;
-    z-index:2;
-    max-width:1180px;
-    margin:0 auto;
-    padding:0 32px;
-    width:100%;
-  }
-
-  .hero h1{
-    font-size:clamp(2.6rem, 6.4vw, 5.4rem);
-    max-width:14ch;
-  }
-
-  .hero h1 .accent{
-    background:linear-gradient(100deg, var(--cyan), var(--violet) 65%);
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
-  }
-
-  .hero-sub{
-    margin-top:28px;
-    font-size:clamp(1.02rem, 1.6vw, 1.2rem);
-    color:var(--ink-dim);
-    max-width:46ch;
-  }
-
-  .hero-actions{
-    display:flex;
-    gap:16px;
-    margin-top:40px;
-    flex-wrap:wrap;
-  }
-
-  .hero-stats{
-    display:flex;
-    gap:28px;
-    margin-top:56px;
-    font-family:var(--mono);
-    font-size:0.82rem;
-    color:var(--ink-faint);
-    flex-wrap:wrap;
-  }
-
-  .hero-stats strong{
-    color:var(--ink-dim);
-    font-weight:500;
-  }
-
-  .scroll-cue{
-    position:absolute;
-    bottom:40px;
-    left:50%;
-    transform:translateX(-50%);
-    z-index:2;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:8px;
-    color:var(--ink-faint);
-    font-family:var(--mono);
-    font-size:0.7rem;
-    letter-spacing:0.1em;
-  }
-
-  .scroll-cue span{
-    width:1px; height:34px;
-    background:linear-gradient(var(--cyan), transparent);
-    animation:scrollpulse 1.8s ease-in-out infinite;
-  }
-
-  @keyframes scrollpulse{
-    0%,100%{ opacity:0.25; }
-    50%{ opacity:1; }
-  }
-
-  /* ---------- SECTIONS (generic) ---------- */
-
-  section{
-    position:relative;
-    padding:120px 0;
-    border-top:1px solid var(--line);
-  }
-
-  .section-head{
-    max-width:640px;
-    margin-bottom:64px;
-  }
-
-  .section-head h2{
-    font-size:clamp(1.8rem, 3.4vw, 2.7rem);
-  }
-
-  .reveal{
-    opacity:0;
-    transform:translateY(24px);
-    transition:opacity .7s ease, transform .7s ease;
-  }
-
-  .reveal.visible{
-    opacity:1;
-    transform:translateY(0);
-  }
-
-  /* ---------- FEATURES ---------- */
-
-  .feature-grid{
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:1px;
-    background:var(--line);
-    border:1px solid var(--line);
-    border-radius:16px;
-    overflow:hidden;
-  }
-
-  .feature-card{
-    background:var(--bg-card);
-    padding:36px 32px;
-    transition:background .25s ease;
-  }
-
-  .feature-card:hover{ background:var(--bg-elevated); }
-
-  .feature-card .num{
-    font-family:var(--mono);
-    font-size:0.78rem;
-    color:var(--ink-faint);
-    margin-bottom:22px;
-    display:block;
-  }
-
-  .feature-card h3{
-    font-size:1.12rem;
-    font-weight:600;
-    margin-bottom:12px;
-  }
-
-  .feature-card p{
-    color:var(--ink-dim);
-    font-size:0.94rem;
-    line-height:1.65;
-  }
-
-  @media (max-width:900px){
-    .feature-grid{ grid-template-columns:1fr; }
-  }
-
-  /* ---------- PIPELINE ---------- */
-
-  .pipeline{
-    display:flex;
-    flex-direction:column;
-  }
-
-  .pipe-step{
-    display:grid;
-    grid-template-columns:90px 1fr;
-    gap:32px;
-    padding:30px 0;
-    border-top:1px solid var(--line);
-    align-items:baseline;
-  }
-
-  .pipe-step:last-child{ border-bottom:1px solid var(--line); }
-
-  .pipe-num{
-    font-family:var(--mono);
-    font-size:0.95rem;
-    color:var(--cyan);
-  }
-
-  .pipe-step h3{
-    font-size:1.15rem;
-    font-weight:600;
-    margin-bottom:6px;
-  }
-
-  .pipe-step p{
-    color:var(--ink-dim);
-    font-size:0.94rem;
-    max-width:56ch;
-  }
-
-  @media (max-width:640px){
-    .pipe-step{ grid-template-columns:1fr; gap:8px; }
-  }
-
-  /* ---------- STACK ---------- */
-
-  .stack-grid{
-    display:flex;
-    flex-wrap:wrap;
-    gap:12px;
-  }
-
-  .stack-tag{
-    font-family:var(--mono);
-    font-size:0.86rem;
-    padding:11px 18px;
-    border:1px solid var(--line-strong);
-    border-radius:100px;
-    color:var(--ink-dim);
-    transition:all .2s ease;
-  }
-
-  .stack-tag:hover{
-    color:var(--ink);
-    border-color:var(--violet);
-    background:rgba(155,135,245,0.08);
-  }
-
-  /* ---------- ROADMAP ---------- */
-
-  .roadmap-quote{
-    font-family:var(--display);
-    font-size:clamp(1.3rem, 2.6vw, 1.9rem);
-    font-weight:500;
-    line-height:1.4;
-    max-width:20ch;
-    margin-bottom:56px;
-    color:var(--ink);
-  }
-
-  .roadmap-quote em{
-    font-style:normal;
-    color:var(--ink-dim);
-  }
-
-  .roadmap-list{
-    display:grid;
-    gap:1px;
-    background:var(--line);
-    border:1px solid var(--line);
-    border-radius:16px;
-    overflow:hidden;
-  }
-
-  .roadmap-item{
-    background:var(--bg-card);
-    padding:28px 32px;
-    display:grid;
-    grid-template-columns:220px 1fr;
-    gap:24px;
-  }
-
-  .roadmap-item .tag{
-    font-family:var(--mono);
-    font-size:0.78rem;
-    color:var(--amber);
-    text-transform:uppercase;
-    letter-spacing:0.08em;
-  }
-
-  .roadmap-item p{
-    color:var(--ink-dim);
-    font-size:0.95rem;
-  }
-
-  .roadmap-item strong{ color:var(--ink); font-weight:600; }
-
-  @media (max-width:700px){
-    .roadmap-item{ grid-template-columns:1fr; gap:10px; }
-  }
-
-  /* ---------- FOOTER ---------- */
-
-  footer{
-    border-top:1px solid var(--line);
-    padding:56px 0 40px;
-  }
-
-  .footer-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    flex-wrap:wrap;
-    gap:24px;
-    margin-bottom:40px;
-  }
-
-  .footer-brand{
-    font-family:var(--display);
-    font-weight:600;
-    font-size:1.1rem;
-  }
-
-  .footer-brand span{
-    display:block;
-    font-family:var(--body);
-    font-weight:400;
-    font-size:0.86rem;
-    color:var(--ink-faint);
-    margin-top:6px;
-  }
-
-  .footer-links{
-    display:flex;
-    gap:28px;
-    font-size:0.9rem;
-    color:var(--ink-dim);
-  }
-
-  .footer-links a:hover{ color:var(--cyan); }
-
-  .footer-bottom{
-    font-family:var(--mono);
-    font-size:0.78rem;
-    color:var(--ink-faint);
-    border-top:1px solid var(--line);
-    padding-top:24px;
-  }
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartDataAnalyzer — Análise Inteligente de Dados</title>
+  <meta name="description" content="Plataforma inteligente para análise exploratória de dados, Machine Learning e geração automática de insights com IA.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS Modules -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/features.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/ml.css">
+  <link rel="stylesheet" href="css/pricing.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
 
-<nav>
-  <div class="nav-inner">
-    <div class="logo"><span class="logo-dot"></span>Smart Data Analyzer</div>
-    <div class="nav-links">
-      <a href="#recursos">Recursos</a>
-      <a href="#como-funciona">Como funciona</a>
-      <a href="#stack">Stack</a>
-      <a href="#roadmap">Roadmap</a>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="#" class="navbar-brand">
+        <div class="brand-icon">SD</div>
+        <span>SmartDataAnalyzer</span>
+      </a>
+      
+      <ul class="navbar-nav">
+        <li><a href="#features" class="nav-link">Funcionalidades</a></li>
+        <li><a href="#dashboard" class="nav-link">Dashboard</a></li>
+        <li><a href="#ml" class="nav-link">Machine Learning</a></li>
+        <li><a href="#pricing" class="nav-link">Preços</a></li>
+      </ul>
+      
+      <div class="navbar-actions">
+        <a href="#" class="btn btn-ghost">Entrar</a>
+        <a href="#" class="btn btn-primary">Começar Grátis</a>
+      </div>
+      
+      <button class="menu-toggle" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </div>
-    <a class="btn" href="https://github.com/bugalho67-gif/SmartDataAnalyzer" target="_blank" rel="noopener">GitHub ↗</a>
-  </div>
-</nav>
-
-<header class="hero">
-  <canvas id="network"></canvas>
-  <div class="hero-content">
-    <div class="eyebrow">Projeto open-source · Python + IA</div>
-    <h1>Pontos soltos.<br><span class="accent">Padrões claros.</span></h1>
-    <p class="hero-sub">O Smart Data Analyzer lê sua planilha, cruza cada coluna, testa modelos e devolve — em português — o que os números realmente significam.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="https://github.com/bugalho67-gif/SmartDataAnalyzer" target="_blank" rel="noopener">Ver código no GitHub</a>
-      <a class="btn" href="#" id="demo-link">Abrir demonstração</a>
-    </div>
-    <div class="hero-stats">
-      <div><strong>60+</strong> módulos</div>
-      <div><strong>4.000+</strong> linhas de Python</div>
-      <div><strong>IA + ML</strong> integrados</div>
-      <div><strong>testes</strong> automatizados</div>
-    </div>
-  </div>
-  <div class="scroll-cue"><span></span>SCROLL</div>
-</header>
-
-<section id="recursos">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="eyebrow">Recursos</div>
-      <h2>Da planilha à decisão, sem trocar de tela</h2>
-    </div>
-    <div class="feature-grid reveal">
-      <div class="feature-card">
-        <span class="num">01</span>
-        <h3>Ingestão flexível</h3>
-        <p>CSV, Excel ou JSON — ou conexão direta com PostgreSQL, MySQL, SQL Server e SQLite.</p>
-      </div>
-      <div class="feature-card">
-        <span class="num">02</span>
-        <h3>Estatística completa</h3>
-        <p>Correlação (Pearson, Spearman, Kendall), outliers por IQR e Z-Score, e um painel dedicado de qualidade dos dados.</p>
-      </div>
-      <div class="feature-card">
-        <span class="num">03</span>
-        <h3>Insights automáticos</h3>
-        <p>A camada de IA lê o conjunto de dados e devolve, em linguagem natural, o que mais importa: nulos, duplicados, dispersão, correlações fortes.</p>
-      </div>
-      <div class="feature-card">
-        <span class="num">04</span>
-        <h3>Machine Learning embutido</h3>
-        <p>AutoML, comparação de modelos, matriz de confusão, curva ROC e importância de variáveis.</p>
-      </div>
-      <div class="feature-card">
-        <span class="num">05</span>
-        <h3>Exportação profissional</h3>
-        <p>Relatórios em PDF, planilhas Excel, CSV e HTML — prontos pra enviar.</p>
-      </div>
-      <div class="feature-card">
-        <span class="num">06</span>
-        <h3>Testado de verdade</h3>
-        <p>Funções centrais cobertas por testes automatizados. Não é só código que funciona por acaso.</p>
-      </div>
+  </nav>
+  
+  <!-- Mobile Nav -->
+  <div class="mobile-nav">
+    <a href="#features" class="nav-link">Funcionalidades</a>
+    <a href="#dashboard" class="nav-link">Dashboard</a>
+    <a href="#ml" class="nav-link">Machine Learning</a>
+    <a href="#pricing" class="nav-link">Preços</a>
+    <div class="navbar-actions">
+      <a href="#" class="btn btn-ghost">Entrar</a>
+      <a href="#" class="btn btn-primary">Começar Grátis</a>
     </div>
   </div>
-</section>
 
-<section id="como-funciona">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="eyebrow">Como funciona</div>
-      <h2>Seis passos, do arquivo bruto ao relatório</h2>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="hero-grid"></div>
+      <div class="gradient-orb hero-orb-1"></div>
+      <div class="gradient-orb hero-orb-2"></div>
+      <div class="gradient-orb hero-orb-3"></div>
     </div>
-    <div class="pipeline reveal">
-      <div class="pipe-step">
-        <div class="pipe-num">01</div>
-        <div><h3>Envie os dados</h3><p>CSV, Excel, JSON — ou conecte direto num banco de dados existente.</p></div>
+    
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        <span>Plataforma de Análise Inteligente</span>
       </div>
-      <div class="pipe-step">
-        <div class="pipe-num">02</div>
-        <div><h3>Validação automática</h3><p>Nulos, duplicados, tipos e qualidade geral, checados assim que o arquivo entra.</p></div>
-      </div>
-      <div class="pipe-step">
-        <div class="pipe-num">03</div>
-        <div><h3>Análise estatística</h3><p>Correlação, outliers e distribuições, calculados e visualizados automaticamente.</p></div>
-      </div>
-      <div class="pipe-step">
-        <div class="pipe-num">04</div>
-        <div><h3>Diagnóstico da IA</h3><p>Os padrões viram texto: o que significa, o que merece atenção primeiro.</p></div>
-      </div>
-      <div class="pipe-step">
-        <div class="pipe-num">05</div>
-        <div><h3>Modelos sob teste</h3><p>O AutoML compara algoritmos e mede o que performa melhor pros seus dados.</p></div>
-      </div>
-      <div class="pipe-step">
-        <div class="pipe-num">06</div>
-        <div><h3>Resultado em mãos</h3><p>Exporte tudo em PDF, Excel, CSV ou HTML — pronto pra decisão.</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="stack">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="eyebrow">Stack técnica</div>
-      <h2>Construído com ferramentas de verdade</h2>
-    </div>
-    <div class="stack-grid reveal">
-      <span class="stack-tag">Python</span>
-      <span class="stack-tag">Streamlit</span>
-      <span class="stack-tag">Pandas</span>
-      <span class="stack-tag">NumPy</span>
-      <span class="stack-tag">scikit-learn</span>
-      <span class="stack-tag">Plotly</span>
-      <span class="stack-tag">Matplotlib</span>
-      <span class="stack-tag">SQLAlchemy</span>
-      <span class="stack-tag">ReportLab</span>
-      <span class="stack-tag">pytest</span>
-      <span class="stack-tag">Docker</span>
-    </div>
-  </div>
-</section>
-
-<section id="roadmap">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="eyebrow">Próximos passos</div>
-      <h2>Pra onde o projeto está indo</h2>
-    </div>
-    <p class="roadmap-quote reveal">Nenhuma ferramenta substitui o julgamento de um analista. <em>Mas dá pra automatizar tudo que vem antes dele.</em></p>
-    <div class="roadmap-list reveal">
-      <div class="roadmap-item">
-        <div class="tag">IA conversacional</div>
-        <p><strong>Perguntar sobre os dados em português</strong> e receber resposta com contexto real do dataset — não uma resposta genérica.</p>
-      </div>
-      <div class="roadmap-item">
-        <div class="tag">AutoML explicado</div>
-        <p><strong>Não só qual modelo venceu</strong>, mas por quê — em linguagem simples, ligando a métrica à decisão.</p>
-      </div>
-      <div class="roadmap-item">
-        <div class="tag">Relatório executivo</div>
-        <p><strong>Estatística, ML e narrativa da IA</strong>, reunidos automaticamente em um único documento.</p>
+      
+      <h1 class="hero-title">
+        <span class="line">Transforme dados</span>
+        <span class="line text-gradient">em decisões</span>
+      </h1>
+      
+      <p class="hero-description">
+        Análise exploratória automática, Machine Learning e insights gerados por IA. 
+        Tudo em uma plataforma moderna, rápida e intuitiva.
+      </p>
+      
+      <div class="hero-actions">
+        <a href="#" class="btn btn-primary btn-lg">
+          <span>Começar Gratuitamente</span>
+          <span>→</span>
+        </a>
+        <a href="#dashboard" class="btn btn-secondary btn-lg">
+          <span>Ver Demo</span>
+        </a>
       </div>
     </div>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <div class="footer-top">
-      <div class="footer-brand">Smart Data Analyzer<span>Desenvolvido por Gabriel Bugalho</span></div>
-      <div class="footer-links">
-        <a href="https://github.com/bugalho67-gif/SmartDataAnalyzer" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://github.com/bugalho67-gif/SmartDataAnalyzer/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+    
+    <!-- Hero Preview -->
+    <div class="hero-preview container-wide">
+      <div class="hero-preview-frame">
+        <div class="hero-preview-header">
+          <span class="preview-dot red"></span>
+          <span class="preview-dot yellow"></span>
+          <span class="preview-dot green"></span>
+          <span class="preview-title">SmartDataAnalyzer — Dashboard</span>
+        </div>
+        <div class="hero-preview-body">
+          <div class="preview-grid">
+            <div class="preview-stat">
+              <div class="preview-stat-label">Registros</div>
+              <div class="preview-stat-value">24.5K</div>
+              <div class="preview-stat-change">↑ 12% vs ontem</div>
+            </div>
+            <div class="preview-stat">
+              <div class="preview-stat-label">Colunas</div>
+              <div class="preview-stat-value">38</div>
+              <div class="preview-stat-change">↑ 3 novas</div>
+            </div>
+            <div class="preview-stat">
+              <div class="preview-stat-label">Qualidade</div>
+              <div class="preview-stat-value">94%</div>
+              <div class="preview-stat-change">↑ 2% vs ontem</div>
+            </div>
+            <div class="preview-stat">
+              <div class="preview-stat-label">Outliers</div>
+              <div class="preview-stat-value">127</div>
+              <div class="preview-stat-change">↓ 8% vs ontem</div>
+            </div>
+          </div>
+          <div class="preview-chart-area">
+            <div class="preview-chart">
+              <div class="preview-bar" style="height: 40%"></div>
+              <div class="preview-bar" style="height: 65%"></div>
+              <div class="preview-bar" style="height: 50%"></div>
+              <div class="preview-bar" style="height: 80%"></div>
+              <div class="preview-bar" style="height: 60%"></div>
+              <div class="preview-bar" style="height: 90%"></div>
+              <div class="preview-bar" style="height: 75%"></div>
+              <div class="preview-bar" style="height: 55%"></div>
+            </div>
+            <div class="preview-donut">
+              <div class="preview-donut-ring"></div>
+              <div class="preview-donut-label">78%</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="footer-bottom">Escrito em Python. Validado por testes, não por sorte.</div>
-  </div>
-</footer>
+    
+    <div class="scroll-indicator">Scroll</div>
+  </section>
 
-<script>
-(function(){
-  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  <!-- Features Section -->
+  <section class="section features" id="features">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">Funcionalidades</div>
+        <h2 class="section-title">Tudo que você precisa<br><span class="text-gradient-subtle">em uma só plataforma</span></h2>
+        <p class="section-description">Do upload de dados à geração de insights com IA. Uma suíte completa para analistas e cientistas de dados.</p>
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-icon">📂</div>
+          <h3 class="feature-title">Importação Inteligente</h3>
+          <p class="feature-description">Suporte nativo para CSV, Excel e JSON. Em breve: Parquet, SQL, XML e APIs REST.</p>
+          <ul class="feature-list">
+            <li>Upload drag-and-drop</li>
+            <li>Detecção automática de encoding</li>
+            <li>Pré-visualização instantânea</li>
+          </ul>
+        </div>
+        
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon">📊</div>
+          <h3 class="feature-title">Dashboard Automático</h3>
+          <p class="feature-description">Métricas, estatísticas e visualizações geradas automaticamente após o upload.</p>
+          <ul class="feature-list">
+            <li>KPIs em tempo real</li>
+            <li>Gráficos adaptativos</li>
+            <li>Exportação em PDF</li>
+          </ul>
+        </div>
+        
+        <div class="feature-card reveal reveal-delay-3">
+          <div class="feature-icon">🤖</div>
+          <h3 class="feature-title">Insights com IA</h3>
+          <p class="feature-description">Arquitetura preparada para múltiplos provedores: OpenAI, Gemini, Claude e Ollama.</p>
+          <ul class="feature-list">
+            <li>Diagnósticos automáticos</li>
+            <li>Chat inteligente</li>
+            <li>Explicação de gráficos</li>
+          </ul>
+        </div>
+        
+        <div class="feature-card feature-card-large reveal reveal-delay-1">
+          <div>
+            <div class="feature-icon">🧠</div>
+            <h3 class="feature-title">Machine Learning</h3>
+            <p class="feature-description">Módulo completo com AutoML, comparação automática de modelos e visualização de feature importance.</p>
+            <ul class="feature-list">
+              <li>Regressão Linear e Logística</li>
+              <li>Decision Tree e Random Forest</li>
+              <li>KNN e Clustering</li>
+              <li>AutoML com seleção automática</li>
+            </ul>
+          </div>
+          <div class="feature-visual">
+            <div class="feature-visual-grid">
+              <div class="visual-cell">📈</div>
+              <div class="visual-cell highlight">🎯</div>
+              <div class="visual-cell">📉</div>
+              <div class="visual-cell">🔍</div>
+              <div class="visual-cell">⚡</div>
+              <div class="visual-cell highlight">🧮</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon">🚨</div>
+          <h3 class="feature-title">Detecção de Outliers</h3>
+          <p class="feature-description">Identifique anomalias com IQR e Z-Score. Visualização interativa via BoxPlot.</p>
+        </div>
+        
+        <div class="feature-card reveal reveal-delay-3">
+          <div class="feature-icon">🧹</div>
+          <h3 class="feature-title">Qualidade de Dados</h3>
+          <p class="feature-description">Análise automática de valores ausentes, duplicados, colunas constantes e cardinalidade.</p>
+        </div>
+      </div>
+      
+      <div class="stats-row reveal">
+        <div class="stat-item">
+          <div class="stat-number" data-count="15000" data-suffix="+">0</div>
+          <div class="stat-label">Análises Realizadas</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-count="99" data-suffix="%">0</div>
+          <div class="stat-label">Uptime Garantido</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-count="500" data-suffix="+">0</div>
+          <div class="stat-label">Empresas Ativas</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-count="50" data-suffix="M+">0</div>
+          <div class="stat-label">Linhas Processadas</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  // ---------- scroll reveal ----------
-  var revealEls = document.querySelectorAll('.reveal');
-  if('IntersectionObserver' in window && !reduceMotion){
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if(entry.isIntersecting){
-          entry.target.classList.add('visible');
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15 });
-    revealEls.forEach(function(el){ io.observe(el); });
-  } else {
-    revealEls.forEach(function(el){ el.classList.add('visible'); });
-  }
+  <div class="divider"></div>
 
-  // ---------- particle network ----------
-  var canvas = document.getElementById('network');
-  var ctx = canvas.getContext('2d');
-  var hero = document.querySelector('.hero');
-  var particles = [];
-  var W, H, DPR;
+  <!-- Interactive Dashboard Section -->
+  <section class="section dashboard-section" id="dashboard">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">Dashboard Interativo</div>
+        <h2 class="section-title">Visualize seus dados<br><span class="text-gradient-subtle">em tempo real</span></h2>
+        <p class="section-description">Dashboard automático com métricas, gráficos interativos e heatmap de correlação.</p>
+      </div>
+      
+      <div class="dashboard-container reveal">
+        <div class="dashboard-header">
+          <div class="dashboard-tabs">
+            <button class="dashboard-tab active" data-tab="overview">Visão Geral</button>
+            <button class="dashboard-tab" data-tab="statistics">Estatísticas</button>
+            <button class="dashboard-tab" data-tab="correlation">Correlação</button>
+            <button class="dashboard-tab" data-tab="quality">Qualidade</button>
+          </div>
+          <div class="dashboard-actions">
+            <button class="dashboard-action-btn">⬇ Exportar</button>
+            <button class="dashboard-action-btn">🔄 Atualizar</button>
+          </div>
+        </div>
+        
+        <div class="dashboard-body">
+          <div class="dashboard-grid">
+            <div class="dashboard-metric">
+              <div class="metric-header">
+                <span class="metric-title">Total de Registros</span>
+                <div class="metric-icon">📄</div>
+              </div>
+              <div class="metric-value" data-target="24587" data-suffix="">0</div>
+              <div class="metric-change positive">↑ 12.5% vs ontem</div>
+            </div>
+            <div class="dashboard-metric">
+              <div class="metric-header">
+                <span class="metric-title">Colunas</span>
+                <div class="metric-icon">📊</div>
+              </div>
+              <div class="metric-value" data-target="38" data-suffix="">0</div>
+              <div class="metric-change positive">↑ 3 novas</div>
+            </div>
+            <div class="dashboard-metric">
+              <div class="metric-header">
+                <span class="metric-title">Score de Qualidade</span>
+                <div class="metric-icon">✨</div>
+              </div>
+              <div class="metric-value" data-target="94" data-suffix="%">0</div>
+              <div class="metric-change positive">↑ 2.1% vs ontem</div>
+            </div>
+            <div class="dashboard-metric">
+              <div class="metric-header">
+                <span class="metric-title">Outliers Detectados</span>
+                <div class="metric-icon">🚨</div>
+              </div>
+              <div class="metric-value" data-target="127" data-suffix="">0</div>
+              <div class="metric-change negative">↓ 8.3% vs ontem</div>
+            </div>
+          </div>
+          
+          <div class="dashboard-charts">
+            <div class="chart-card">
+              <div class="chart-header">
+                <span class="chart-title">Tendência de Vendas</span>
+                <div class="chart-legend">
+                  <span class="legend-item"><span class="legend-dot" style="background: #3b82f6"></span>2024</span>
+                  <span class="legend-item"><span class="legend-dot" style="background: #8b5cf6"></span>2023</span>
+                </div>
+              </div>
+              <div class="chart-canvas-container">
+                <canvas id="mainChart" class="chart-canvas"></canvas>
+              </div>
+            </div>
+            
+            <div class="chart-card">
+              <div class="chart-header">
+                <span class="chart-title">Distribuição</span>
+              </div>
+              <div class="preview-donut" style="height: 280px;">
+                <div class="preview-donut-ring"></div>
+                <div class="preview-donut-label">78%</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="data-table-container">
+            <div class="data-table-header">
+              <span class="data-table-title">Pré-visualização dos Dados</span>
+              <span class="badge">Ao vivo</span>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Data</th>
+                  <th>Categoria</th>
+                  <th>Valor</th>
+                  <th>Status</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#1024</td>
+                  <td>2024-01-15</td>
+                  <td>Eletrônicos</td>
+                  <td>R$ 2.450,00</td>
+                  <td><span style="color: #22c55e">● Aprovado</span></td>
+                  <td>94.2</td>
+                </tr>
+                <tr>
+                  <td>#1025</td>
+                  <td>2024-01-16</td>
+                  <td>Móveis</td>
+                  <td>R$ 1.890,00</td>
+                  <td><span style="color: #22c55e">● Aprovado</span></td>
+                  <td>88.7</td>
+                </tr>
+                <tr>
+                  <td>#1026</td>
+                  <td>2024-01-16</td>
+                  <td>Eletrônicos</td>
+                  <td>R$ 3.120,00</td>
+                  <td><span style="color: #eab308">● Pendente</span></td>
+                  <td>72.1</td>
+                </tr>
+                <tr>
+                  <td>#1027</td>
+                  <td>2024-01-17</td>
+                  <td>Vestuário</td>
+                  <td>R$ 450,00</td>
+                  <td><span style="color: #ef4444">● Rejeitado</span></td>
+                  <td>45.3</td>
+                </tr>
+                <tr>
+                  <td>#1028</td>
+                  <td>2024-01-17</td>
+                  <td>Eletrônicos</td>
+                  <td>R$ 5.600,00</td>
+                  <td><span style="color: #22c55e">● Aprovado</span></td>
+                  <td>96.8</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="chart-card" style="margin-top: var(--space-6);">
+            <div class="chart-header">
+              <span class="chart-title">Matriz de Correlação</span>
+            </div>
+            <div class="heatmap-labels">
+              <div class="heatmap-label">Idade</div>
+              <div class="heatmap-label">Renda</div>
+              <div class="heatmap-label">Score</div>
+              <div class="heatmap-label">Tempo</div>
+              <div class="heatmap-label">Gasto</div>
+            </div>
+            <div class="heatmap-grid">
+              <div class="heatmap-cell" data-value="1.0">1.0</div>
+              <div class="heatmap-cell" data-value="0.65">0.65</div>
+              <div class="heatmap-cell" data-value="-0.32">-0.32</div>
+              <div class="heatmap-cell" data-value="0.48">0.48</div>
+              <div class="heatmap-cell" data-value="0.71">0.71</div>
+              <div class="heatmap-cell" data-value="0.65">0.65</div>
+              <div class="heatmap-cell" data-value="1.0">1.0</div>
+              <div class="heatmap-cell" data-value="-0.18">-0.18</div>
+              <div class="heatmap-cell" data-value="0.52">0.52</div>
+              <div class="heatmap-cell" data-value="0.83">0.83</div>
+              <div class="heatmap-cell" data-value="-0.32">-0.32</div>
+              <div class="heatmap-cell" data-value="-0.18">-0.18</div>
+              <div class="heatmap-cell" data-value="1.0">1.0</div>
+              <div class="heatmap-cell" data-value="-0.45">-0.45</div>
+              <div class="heatmap-cell" data-value="-0.22">-0.22</div>
+              <div class="heatmap-cell" data-value="0.48">0.48</div>
+              <div class="heatmap-cell" data-value="0.52">0.52</div>
+              <div class="heatmap-cell" data-value="-0.45">-0.45</div>
+              <div class="heatmap-cell" data-value="1.0">1.0</div>
+              <div class="heatmap-cell" data-value="0.38">0.38</div>
+              <div class="heatmap-cell" data-value="0.71">0.71</div>
+              <div class="heatmap-cell" data-value="0.83">0.83</div>
+              <div class="heatmap-cell" data-value="-0.22">-0.22</div>
+              <div class="heatmap-cell" data-value="0.38">0.38</div>
+              <div class="heatmap-cell" data-value="1.0">1.0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  var colors = ['#3EE6C9', '#9B87F5', '#FFB454'];
+  <div class="divider"></div>
 
-  function resize(){
-    W = hero.offsetWidth;
-    H = hero.offsetHeight;
-    DPR = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = W * DPR;
-    canvas.height = H * DPR;
-    canvas.style.width = W + 'px';
-    canvas.style.height = H + 'px';
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-  }
+  <!-- Machine Learning Section -->
+  <section class="section ml-section" id="ml">
+    <div class="container">
+      <div class="ml-grid">
+        <div class="ml-content reveal">
+          <div class="section-label" style="justify-content: flex-start; margin-bottom: var(--space-4);">Machine Learning</div>
+          <h2 class="ml-title">Modelos poderosos,<br><span class="text-gradient-subtle">resultados precisos</span></h2>
+          <p class="ml-description">AutoML que compara automaticamente múltiplos algoritmos e seleciona o melhor para o seu dataset.</p>
+          
+          <div class="ml-features">
+            <div class="ml-feature">
+              <div class="ml-feature-icon">🎯</div>
+              <div class="ml-feature-text">
+                <h4>AutoML Inteligente</h4>
+                <p>Comparação automática entre Regressão Linear, Decision Tree, Random Forest e mais.</p>
+              </div>
+            </div>
+            <div class="ml-feature">
+              <div class="ml-feature-icon">📊</div>
+              <div class="ml-feature-text">
+                <h4>Métricas Completas</h4>
+                <p>Accuracy, Precision, Recall, F1-Score, ROC Curve e Confusion Matrix.</p>
+              </div>
+            </div>
+            <div class="ml-feature">
+              <div class="ml-feature-icon">⚡</div>
+              <div class="ml-feature-text">
+                <h4>Feature Importance</h4>
+                <p>Visualize quais variáveis mais impactam suas previsões.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="ml-visual reveal reveal-delay-2">
+          <div class="model-comparison">
+            <div class="comparison-header">
+              <span class="comparison-title">Comparação de Modelos</span>
+              <span class="comparison-badge">AutoML</span>
+            </div>
+            
+            <div class="model-item">
+              <div class="model-rank gold">1</div>
+              <div class="model-info">
+                <div class="model-name">Random Forest</div>
+                <div class="model-bar-bg">
+                  <div class="model-bar" data-width="94"></div>
+                </div>
+              </div>
+              <div class="model-score">94.2%</div>
+            </div>
+            
+            <div class="model-item">
+              <div class="model-rank silver">2</div>
+              <div class="model-info">
+                <div class="model-name">Decision Tree</div>
+                <div class="model-bar-bg">
+                  <div class="model-bar" data-width="89"></div>
+                </div>
+              </div>
+              <div class="model-score">89.7%</div>
+            </div>
+            
+            <div class="model-item">
+              <div class="model-rank bronze">3</div>
+              <div class="model-info">
+                <div class="model-name">Logistic Regression</div>
+                <div class="model-bar-bg">
+                  <div class="model-bar" data-width="82"></div>
+                </div>
+              </div>
+              <div class="model-score">82.3%</div>
+            </div>
+            
+            <div class="model-item">
+              <div class="model-rank bronze">4</div>
+              <div class="model-info">
+                <div class="model-name">KNN</div>
+                <div class="model-bar-bg">
+                  <div class="model-bar" data-width="76"></div>
+                </div>
+              </div>
+              <div class="model-score">76.8%</div>
+            </div>
+            
+            <div class="confusion-matrix">
+              <div class="cm-cell correct">
+                <div class="cm-value">847</div>
+                <div class="cm-label">Verdadeiro Positivo</div>
+              </div>
+              <div class="cm-cell incorrect">
+                <div class="cm-value">23</div>
+                <div class="cm-label">Falso Positivo</div>
+              </div>
+              <div class="cm-cell incorrect">
+                <div class="cm-value">31</div>
+                <div class="cm-label">Falso Negativo</div>
+              </div>
+              <div class="cm-cell correct">
+                <div class="cm-value">756</div>
+                <div class="cm-label">Verdadeiro Negativo</div>
+              </div>
+            </div>
+            
+            <div class="roc-container">
+              <div class="roc-title">Curva ROC — AUC: 0.94</div>
+              <div class="roc-chart">
+                <div class="roc-line"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  function initParticles(){
-    var count = W < 700 ? 34 : 68;
-    particles = [];
-    for(var i=0; i<count; i++){
-      particles.push({
-        x: Math.random()*W,
-        y: Math.random()*H,
-        vx: (Math.random()-0.5)*0.28,
-        vy: (Math.random()-0.5)*0.28,
-        r: Math.random()*1.6 + 1.2,
-        color: colors[i % colors.length]
-      });
-    }
-  }
+  <div class="divider"></div>
 
-  var maxDist = 150;
+  <!-- Pricing Section -->
+  <section class="section pricing" id="pricing">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">Preços</div>
+        <h2 class="section-title">Escolha seu plano</h2>
+        <p class="section-description">Comece gratuitamente e evolua conforme suas necessidades de análise.</p>
+      </div>
+      
+      <div class="pricing-grid reveal">
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <h3 class="pricing-name">Starter</h3>
+            <p class="pricing-description">Ideal para estudantes e projetos pessoais.</p>
+          </div>
+          <div class="pricing-price">
+            <span class="price-currency">R$</span>
+            <span class="price-value">0</span>
+            <span class="price-period">/mês</span>
+          </div>
+          <ul class="pricing-features">
+            <li class="included">Até 10.000 registros</li>
+            <li class="included">Dashboard automático</li>
+            <li class="included">Estatísticas básicas</li>
+            <li class="included">3 gráficos por análise</li>
+            <li class="not-included">Machine Learning</li>
+            <li class="not-included">IA Generativa</li>
+            <li class="not-included">Exportação PDF</li>
+          </ul>
+          <a href="#" class="btn btn-secondary pricing-cta">Começar Grátis</a>
+        </div>
+        
+        <div class="pricing-card featured">
+          <div class="pricing-header">
+            <h3 class="pricing-name">Pro</h3>
+            <p class="pricing-description">Para profissionais e pequenas equipes.</p>
+          </div>
+          <div class="pricing-price">
+            <span class="price-currency">R$</span>
+            <span class="price-value">97</span>
+            <span class="price-period">/mês</span>
+          </div>
+          <ul class="pricing-features">
+            <li class="included">Até 1.000.000 registros</li>
+            <li class="included">Dashboard automático</li>
+            <li class="included">Estatísticas avançadas</li>
+            <li class="included">Gráficos ilimitados</li>
+            <li class="included">Machine Learning completo</li>
+            <li class="included">IA Generativa</li>
+            <li class="included">Exportação PDF/Excel</li>
+          </ul>
+          <a href="#" class="btn btn-primary pricing-cta">Assinar Pro</a>
+        </div>
+        
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <h3 class="pricing-name">Enterprise</h3>
+            <p class="pricing-description">Para grandes organizações.</p>
+          </div>
+          <div class="pricing-price">
+            <span class="price-currency">R$</span>
+            <span class="price-value">297</span>
+            <span class="price-period">/mês</span>
+          </div>
+          <ul class="pricing-features">
+            <li class="included">Registros ilimitados</li>
+            <li class="included">Tudo do Pro</li>
+            <li class="included">API REST</li>
+            <li class="included">Banco de dados dedicado</li>
+            <li class="included">SSO e controle de acesso</li>
+            <li class="included">Suporte prioritário</li>
+            <li class="included">LGPD compliance</li>
+          </ul>
+          <a href="#" class="btn btn-secondary pricing-cta">Falar com Vendas</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  function drawFrame(){
-    ctx.clearRect(0,0,W,H);
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-bg">
+      <div class="cta-orb cta-orb-1"></div>
+      <div class="cta-orb cta-orb-2"></div>
+    </div>
+    <div class="container">
+      <div class="cta-content reveal">
+        <h2 class="cta-title">Pronto para transformar<br><span class="text-gradient">seus dados em decisões?</span></h2>
+        <p class="cta-description">Junte-se a milhares de analistas que já usam o SmartDataAnalyzer para extrair insights poderosos.</p>
+        <div class="cta-actions">
+          <a href="#" class="btn btn-primary btn-lg">Começar Gratuitamente</a>
+          <a href="#" class="btn btn-secondary btn-lg">Agendar Demo</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    for(var i=0; i<particles.length; i++){
-      var p = particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      if(p.x < 0 || p.x > W) p.vx *= -1;
-      if(p.y < 0 || p.y > H) p.vy *= -1;
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand-icon">SD</div>
+          <p>Plataforma inteligente para análise exploratória de dados, Machine Learning e geração automática de insights.</p>
+        </div>
+        
+        <div class="footer-links">
+          <h4>Produto</h4>
+          <ul>
+            <li><a href="#features">Funcionalidades</a></li>
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#ml">Machine Learning</a></li>
+            <li><a href="#pricing">Preços</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-links">
+          <h4>Recursos</h4>
+          <ul>
+            <li><a href="#">Documentação</a></li>
+            <li><a href="#">API</a></li>
+            <li><a href="#">Changelog</a></li>
+            <li><a href="#">Roadmap</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-links">
+          <h4>Empresa</h4>
+          <ul>
+            <li><a href="#">Sobre</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Carreiras</a></li>
+            <li><a href="#">Contato</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <div class="footer-copyright">© 2024 SmartDataAnalyzer. Todos os direitos reservados.</div>
+        <div class="footer-social">
+          <a href="#">𝕏</a>
+          <a href="#">in</a>
+          <a href="#">Gh</a>
+          <a href="#">📧</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 
-      for(var j=i+1; j<particles.length; j++){
-        var q = particles[j];
-        var dx = p.x-q.x, dy = p.y-q.y;
-        var dist = Math.sqrt(dx*dx+dy*dy);
-        if(dist < maxDist){
-          ctx.strokeStyle = 'rgba(139,146,181,' + (0.22*(1-dist/maxDist)) + ')';
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(p.x,p.y);
-          ctx.lineTo(q.x,q.y);
-          ctx.stroke();
-        }
-      }
-    }
-
-    for(var k=0; k<particles.length; k++){
-      var pt = particles[k];
-      ctx.beginPath();
-      ctx.arc(pt.x, pt.y, pt.r, 0, Math.PI*2);
-      ctx.fillStyle = pt.color;
-      ctx.shadowColor = pt.color;
-      ctx.shadowBlur = 6;
-      ctx.fill();
-      ctx.shadowBlur = 0;
-    }
-  }
-
-  function loop(){
-    drawFrame();
-    requestAnimationFrame(loop);
-  }
-
-  function start(){
-    resize();
-    initParticles();
-    if(reduceMotion){
-      drawFrame();
-    } else {
-      loop();
-    }
-  }
-
-  var resizeTimer;
-  window.addEventListener('resize', function(){
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function(){
-      resize();
-      initParticles();
-    }, 200);
-  });
-
-  document.addEventListener('visibilitychange', function(){
-    // no-op hook kept simple; loop is cheap enough to keep running
-  });
-
-  start();
-})();
-</script>
-
+  <!-- JS Modules -->
+  <script src="js/main.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/scroll.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/dashboard.js"></script>
 </body>
 </html>
