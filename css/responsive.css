@@ -1,0 +1,162 @@
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .feature-card-large {
+    grid-column: span 2;
+  }
+  
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .dashboard-charts {
+    grid-template-columns: 1fr;
+  }
+  
+  .ml-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-10);
+  }
+  
+  .ml-visual {
+    order: -1;
+  }
+  
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+  }
+  
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: var(--space-20) 0;
+  }
+  
+  .section-title {
+    font-size: var(--text-3xl);
+  }
+  
+  .navbar-nav {
+    display: none;
+  }
+  
+  .menu-toggle {
+    display: flex;
+  }
+  
+  .navbar-actions .btn-ghost {
+    display: none;
+  }
+  
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+    padding: 0 var(--space-8);
+  }
+  
+  .hero-actions .btn {
+    width: 100%;
+  }
+  
+  .preview-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .preview-chart-area {
+    grid-template-columns: 1fr;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .feature-card-large {
+    grid-template-columns: 1fr;
+    grid-column: span 1;
+  }
+  
+  .feature-visual-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .data-table th,
+  .data-table td {
+    padding: var(--space-3);
+    font-size: var(--text-xs);
+  }
+  
+  .heatmap-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .heatmap-labels {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .cta-actions {
+    flex-direction: column;
+    width: 100%;
+    padding: 0 var(--space-8);
+  }
+  
+  .cta-actions .btn {
+    width: 100%;
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-10);
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    gap: var(--space-4);
+    text-align: center;
+  }
+  
+  .model-item {
+    gap: var(--space-3);
+  }
+  
+  .model-score {
+    font-size: var(--text-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 var(--space-4);
+  }
+  
+  .hero-title {
+    font-size: var(--text-4xl);
+  }
+  
+  .section-title {
+    font-size: var(--text-2xl);
+  }
+  
+  .price-value {
+    font-size: var(--text-4xl);
+  }
+}
