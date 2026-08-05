@@ -1,38 +1,58 @@
 import streamlit as st
 
-from core.logger import logger
+"""Utilitários para carregar arquivos tabulares em DataFrames do pandas."""
+
+from pathlib import Path
+
+import pandas as pd
+
+from core.exceptions import DataLoadError
 
 
-class DataLoadError(Exception):
-    """Erro ao carregar ou interpretar um arquivo de dados (CSV, Excel, JSON)."""
+class DataLoader:
+    """Carrega arquivos CSV, Excel e JSON em um DataFrame do pandas."""
 
+    SUPPORTED_EXTENSIONS = (".csv", ".xlsx", ".json")
 
-class AIError(Exception):
-    """Erro ao consultar um provedor de IA (local ou externo)."""
+    @staticmethod
+    def load(file) -> pd.DataFrame:
+        """
+        Carrega um arquivo enviado pelo usuário em um DataFrame.
 
+        Parameters
+        ----------
+        file : UploadedFile
+            Objeto retornado por ``st.file_uploader``, com um atributo
+            ``.name`` contendo o nome original do arquivo.
 
-class ExportError(Exception):
-    """Erro ao gerar ou exportar um relatório (PDF, Excel, CSV, HTML)."""
+        Returns
+        -------
+        pd.DataFrame
+            Dados carregados.
 
+        Raises
+        ------
+        DataLoadError
+            Se a extensão não for suportada ou o arquivo não puder ser lido.
+        """
+        extension = Path(file.name).suffix.lower()
 
-class DatabaseError(Exception):
-    """Erro ao conectar ou consultar um banco de dados externo."""
+        if extension not in DataLoader.SUPPORTED_EXTENSIONS:
+            raise DataLoadError(
+                f"Formato '{extension}' não suportado. "
+                f"Use um dos formatos: {', '.join(DataLoader.SUPPORTED_EXTENSIONS)}."
+            )
 
-
-class ValidationError(Exception):
-    """Erro de validação de dados de entrada."""
-
-
-def show_error(error):
-
-    logger.exception(str(error))
-
-    st.error(
-        f"""
-
-Erro durante o processamento.
-
-{error}
+        try:
+            if extension == ".csv":
+                return pd.read_csv(file)
+            if extension == ".xlsx":
+                return pd.read_excel(file)
+            return pd.read_json(file)
+        except Exception as exc:
+            raise DataLoadError(
+                f"Não foi possível ler o arquivo '{file.name}': {exc}"
+            ) from exc
 
 """
     )
