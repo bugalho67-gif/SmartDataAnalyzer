@@ -1,7 +1,7 @@
 import streamlit as st
 
 
-from config import (
+from app_config import (
     APP_NAME,
     SUPPORTED_FILES,
     MAX_UPLOAD_SIZE_MB
