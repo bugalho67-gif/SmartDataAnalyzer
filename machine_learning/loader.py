@@ -16,25 +16,6 @@ class DataLoader:
 
     @staticmethod
     def load(file) -> pd.DataFrame:
-        """
-        Carrega um arquivo enviado pelo usuário em um DataFrame.
-
-        Parameters
-        ----------
-        file : UploadedFile
-            Objeto retornado por ``st.file_uploader``, com um atributo
-            ``.name`` contendo o nome original do arquivo.
-
-        Returns
-        -------
-        pd.DataFrame
-            Dados carregados.
-
-        Raises
-        ------
-        DataLoadError
-            Se a extensão não for suportada ou o arquivo não puder ser lido.
-        """
         extension = Path(file.name).suffix.lower()
 
         if extension not in DataLoader.SUPPORTED_EXTENSIONS:
@@ -53,6 +34,3 @@ class DataLoader:
             raise DataLoadError(
                 f"Não foi possível ler o arquivo '{file.name}': {exc}"
             ) from exc
-
-"""
-    )
