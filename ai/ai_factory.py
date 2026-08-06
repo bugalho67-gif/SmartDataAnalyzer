@@ -4,10 +4,10 @@ import os
 
 from providers.base import BaseProvider
 from providers.local import LocalProvider
+from providers.openai import OpenAIProvider
 
 # Descomente quando implementar os provedores
 #
-# from providers.openai_provider import OpenAIProvider
 # from providers.gemini_provider import GeminiProvider
 # from providers.ollama_provider import OllamaProvider
 
@@ -19,13 +19,10 @@ class AIProviderFactory:
     """
 
     _providers = {
-
         "local": LocalProvider,
-
-        # "openai": OpenAIProvider,
+        "openai": OpenAIProvider,
         # "gemini": GeminiProvider,
         # "ollama": OllamaProvider,
-
     }
 
     @classmethod
@@ -33,7 +30,6 @@ class AIProviderFactory:
         """
         Retorna os provedores registrados.
         """
-
         return sorted(cls._providers.keys())
 
     @classmethod
@@ -46,7 +42,6 @@ class AIProviderFactory:
         Permite registrar novos provedores
         dinamicamente.
         """
-
         cls._providers[name.lower()] = provider
 
     @classmethod
@@ -62,9 +57,7 @@ class AIProviderFactory:
 
         Se o provedor não existir, utiliza LocalProvider.
         """
-
         if provider_name is None:
-
             provider_name = os.getenv(
                 "AI_PROVIDER",
                 "local"
@@ -92,9 +85,6 @@ def get_provider(
 
     ou
 
-    provider = get_provider("gemini")
+    provider = get_provider("openai")
     """
-
-    return AIProviderFactory.create(
-        provider_name
-    )
+    return AIProviderFactory.create(provider_name)
