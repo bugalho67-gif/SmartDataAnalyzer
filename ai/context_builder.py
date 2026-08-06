@@ -1,50 +1,38 @@
-from __future__ import annotations
-
-import json
+"""Constrói o contexto enviado ao modelo de IA a partir do DataFrame."""
 
 import pandas as pd
 
-from ai.diagnostics import analyze_dataframe
+from app_config import MAX_AI_CONTEXT_ROWS
 
 
-def build_context(
-    df: pd.DataFrame
-) -> str:
+def build_context(df: pd.DataFrame) -> str:
     """
-    Constrói um contexto compacto
-    para ser enviado à IA.
+    Gera um resumo textual do DataFrame para ser usado
+    como contexto pelo modelo de IA.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Conjunto de dados carregado pelo usuário.
+
+    Returns
+    -------
+    str
+        Texto com estatísticas e amostra dos dados.
     """
+    linhas = len(df)
+    colunas = len(df.columns)
+    amostra = df.head(MAX_AI_CONTEXT_ROWS).to_string(index=False)
 
-    info = analyze_dataframe(df)
+    resumo = f"""
+Resumo do conjunto de dados:
+- Registros: {linhas}
+- Colunas: {colunas}
+- Colunas disponíveis: {', '.join(df.columns)}
+- Tipos de dados:
+{df.dtypes.to_string()}
 
-    contexto = {
-
-        "registros": info["rows"],
-
-        "colunas": info["columns"],
-
-        "nomes_colunas": info["column_names"],
-
-        "nulos": info["missing"],
-
-        "duplicados": info["duplicates"],
-
-        "colunas_numericas": info["numeric_columns"],
-
-        "colunas_categoricas": info["categorical_columns"],
-
-        "estatisticas": info["numeric_summary"],
-
-        "categorias": info["categorical_summary"],
-
-        "amostra": df.head(5).to_dict(
-            orient="records"
-        )
-
-    }
-
-    return json.dumps(
-        contexto,
-        indent=4,
-        ensure_ascii=False
-    )
+Amostra dos primeiros {min(linhas, MAX_AI_CONTEXT_ROWS)} registros:
+{amostra}
+"""
+    return resumo.strip()
