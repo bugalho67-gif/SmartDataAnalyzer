@@ -1,6 +1,7 @@
 import streamlit as st
 import plotly.express as px
 import pandas as pd
+from ui.theme import apply_plotly_theme
 
 
 def show_graphics(df: pd.DataFrame):
@@ -26,7 +27,7 @@ def show_graphics(df: pd.DataFrame):
         )
 
         st.plotly_chart(
-            fig,
+            apply_plotly_theme(fig),
             use_container_width=True
         )
 
@@ -37,7 +38,7 @@ def show_graphics(df: pd.DataFrame):
         )
 
         st.plotly_chart(
-            fig,
+            apply_plotly_theme(fig),
             use_container_width=True
         )
 
@@ -60,7 +61,7 @@ def show_graphics(df: pd.DataFrame):
         )
 
         st.plotly_chart(
-            fig,
+            apply_plotly_theme(fig),
             use_container_width=True
         )
 
@@ -72,7 +73,7 @@ def show_graphics(df: pd.DataFrame):
         )
 
         st.plotly_chart(
-            fig,
+            apply_plotly_theme(fig),
             use_container_width=True
         )
 
@@ -101,6 +102,6 @@ def show_graphics(df: pd.DataFrame):
         )
 
         st.plotly_chart(
-            fig,
+            apply_plotly_theme(fig),
             use_container_width=True
         )

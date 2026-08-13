@@ -3,11 +3,11 @@ import streamlit as st
 
 def create_sidebar():
 
-    st.sidebar.title("📊 Smart Data Analyzer")
+    st.sidebar.markdown("### SmartDataAnalyzer")
 
     menu = st.sidebar.radio(
 
-        "Menu",
+        "Navegação",
 
         [
 

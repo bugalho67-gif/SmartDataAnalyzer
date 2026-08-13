@@ -108,7 +108,7 @@ SESSION_TIMEOUT = int(
 MAX_UPLOAD_SIZE_MB = int(
     os.getenv(
         "MAX_UPLOAD_SIZE_MB",
-        "200"
+        "100"
     )
 )
 
@@ -170,7 +170,11 @@ SUPPORTED_FILES = [
 
     "xlsx",
 
-    "json"
+    "json",
+
+    "parquet",
+
+    "xml"
 
 ]
 
