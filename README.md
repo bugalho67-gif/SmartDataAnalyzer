@@ -147,19 +147,16 @@ A Fase 3 adiciona uma camada visual SaaS sobre o Streamlit sem trocar o framewor
 
 O projeto possui uma arquitetura preparada para múltiplos provedores de IA.
 
-Atualmente:
+Atualmente, a Fase 4 adiciona uma factory unificada em `ai/llm_factory.py` com adapters para:
 
-- Provider Local ✅
+- Local ✅
+- OpenAI ✅
+- Gemini ✅
+- Claude ✅
+- Ollama ✅
+- Azure OpenAI ✅
 
-Arquitetura preparada para:
-
-- OpenAI
-- Gemini
-- Claude
-- Ollama
-- Azure OpenAI
-
-A IA poderá responder perguntas sobre os dados, gerar diagnósticos automáticos e auxiliar na interpretação dos resultados.
+Cada adapter expõe os métodos `chat(messages)`, `generate_insights(data_summary)` e `explain_chart(chart_data)`, mantendo compatibilidade com o método legado `ask(question, context)`. Configure o provedor com `LLM_PROVIDER` ou `AI_PROVIDER` no `.env`.
 
 ---
 
