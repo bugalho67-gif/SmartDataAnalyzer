@@ -219,6 +219,36 @@ Arquitetura preparada para:
 
 # 🔒 Segurança
 
+A Fase 2 começou com uma base local de segurança para reduzir riscos antes das próximas features:
+
+- Login obrigatório antes de acessar upload, análise ou banco de dados.
+- Hash de senha com PBKDF2-HMAC e salt único por usuário.
+- Sessões persistidas em SQLite com expiração por inatividade de 30 minutos.
+- RBAC com papéis `admin`, `analyst` e `viewer`.
+- Termo de consentimento LGPD no primeiro acesso autenticado.
+- Logs de auditoria em SQLite para eventos sensíveis.
+- Validação segura de upload com limite de 100 MB, rejeição de executáveis/scripts, checagem básica de magic bytes e detecção de CSV/Formula Injection.
+- Anonimização automática opcional de CPF, CNPJ, e-mail, telefone e RG.
+
+Conta administrativa local inicial:
+
+```text
+E-mail: admin@smartdataanalyzer.dev
+Senha: valor de DEFAULT_ADMIN_PASSWORD ou admin12345 em desenvolvimento
+```
+
+> Em produção, configure `DEFAULT_ADMIN_PASSWORD`, `SECRET_KEY` e chaves de provedores via `.env`, `st.secrets` ou variáveis de ambiente. Nunca commite secrets.
+
+## Variáveis de ambiente principais
+
+Consulte `.env.example` para o template completo. As variáveis mais importantes são:
+
+- `DEFAULT_ADMIN_PASSWORD`: senha inicial do admin local.
+- `SECRET_KEY`: segredo da aplicação em produção.
+- `MAX_UPLOAD_SIZE_MB`: limite de upload, com padrão seguro de 100 MB.
+- `AI_PROVIDER`, `AI_MODEL`, `OPENAI_API_KEY`: configuração dos provedores de IA.
+
+
 O projeto foi desenvolvido considerando boas práticas de segurança.
 
 Recursos atuais:
