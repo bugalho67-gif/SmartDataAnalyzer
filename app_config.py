@@ -170,7 +170,11 @@ SUPPORTED_FILES = [
 
     "xlsx",
 
-    "json"
+    "json",
+
+    "parquet",
+
+    "xml"
 
 ]
 

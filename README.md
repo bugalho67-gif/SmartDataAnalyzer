@@ -44,15 +44,18 @@ Tudo isso através de uma interface moderna, intuitiva e preparada para desktop 
 
 ## 📂 Importação de dados
 
+A Fase 5 adiciona preview seguro das primeiras 100 linhas antes do processamento completo.
+
+
 - CSV
 - Excel (.xlsx)
 - JSON
+- Parquet (depende de `pyarrow`)
+- XML
 
 Em breve:
 
-- Parquet
 - SQL
-- XML
 - API REST
 
 ---

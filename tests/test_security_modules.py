@@ -72,3 +72,9 @@ def test_upload_rate_limiter_blocks_after_limit() -> None:
     assert limiter.is_allowed("user-1") is True
     assert limiter.is_allowed("user-1") is True
     assert limiter.is_allowed("user-1") is False
+
+
+def test_validate_upload_accepts_parquet_magic_bytes() -> None:
+    upload = NamedBytesIO(b"PAR1conteudo-minimo", "dados.parquet")
+
+    validate_upload_file(upload)

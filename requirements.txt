@@ -17,3 +17,5 @@ pymysql
 pyodbc
 python-dotenv
 openai>=1.30.0
+
+pyarrow>=15.0.0  # suporte a importação Parquet

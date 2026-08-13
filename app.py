@@ -7,6 +7,7 @@ from core.exceptions import show_error
 from machine_learning.file_handler import process_uploaded_file
 from machine_learning.filters import apply_filters
 from machine_learning.page_controller import render_page
+from machine_learning.loader import DataLoader
 from machine_learning.progress import finish_progress, show_progress, update_progress
 from machine_learning.search import search_dataframe
 from machine_learning.sidebar import create_sidebar
@@ -83,7 +84,7 @@ def main() -> None:
     if uploaded_file is None:
         render_empty_state(
             "Nenhum dataset carregado",
-            "Envie um arquivo CSV, Excel ou JSON para começar a análise segura.",
+            "Envie um arquivo CSV, Excel, JSON, Parquet ou XML para começar a análise segura.",
             icon="📁",
         )
         st.stop()
@@ -94,6 +95,10 @@ def main() -> None:
             st.stop()
 
         validate_upload_file(uploaded_file)
+        preview_df = DataLoader.preview(uploaded_file, rows=100)
+        with st.expander("Prévia segura dos dados", expanded=False):
+            st.dataframe(preview_df, use_container_width=True)
+
         audit_logger.log_event(
             "upload_validado",
             user_id=user.id,

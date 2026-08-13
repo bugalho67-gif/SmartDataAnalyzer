@@ -10,7 +10,7 @@ from typing import BinaryIO
 from core.exceptions import ValidationError
 
 MAX_UPLOAD_SIZE_MB = 100
-ALLOWED_EXTENSIONS = {".csv", ".xlsx", ".json"}
+ALLOWED_EXTENSIONS = {".csv", ".xlsx", ".json", ".parquet", ".xml"}
 BLOCKED_EXTENSIONS = {".exe", ".bat", ".cmd", ".sh", ".ps1", ".zip", ".js", ".py"}
 DANGEROUS_PREFIXES = ("=", "+", "-", "@")
 
@@ -18,6 +18,8 @@ _MAGIC_BYTES: dict[str, tuple[bytes, ...]] = {
     ".csv": (b"",),
     ".json": (b"{", b"["),
     ".xlsx": (b"PK\x03\x04",),
+    ".parquet": (b"PAR1",),
+    ".xml": (b"<",),
 }
 
 
@@ -67,7 +69,7 @@ def validate_upload_file(file: BinaryIO, max_size_mb: int = MAX_UPLOAD_SIZE_MB) 
     if expected_headers != (b"",) and not head.lstrip().startswith(expected_headers):
         raise ValidationError("Assinatura do arquivo incompatível com a extensão informada.")
 
-    if extension in {".csv", ".json"} and has_formula_injection(head):
+    if extension in {".csv", ".json", ".xml"} and has_formula_injection(head):
         raise ValidationError("Possível CSV/Formula Injection detectada no arquivo.")
 
 
