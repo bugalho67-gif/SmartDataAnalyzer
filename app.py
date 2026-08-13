@@ -15,9 +15,16 @@ from security.audit import AuditLogger
 from security.auth import AuthService, render_user_header
 from security.rbac import Role, has_permission
 from security.upload import upload_rate_limiter, validate_upload_file
+from ui.theme import (
+    apply_global_theme,
+    render_app_header,
+    render_empty_state,
+    render_theme_toggle,
+)
 
 
 st.set_page_config(page_title=APP_NAME, page_icon="📊", layout="wide")
+apply_global_theme()
 
 
 def render_consent(auth_service: AuthService, user_id: int) -> None:
@@ -43,12 +50,17 @@ def main() -> None:
         auth_service.require_role(Role.VIEWER)
         return
 
+    render_theme_toggle()
     render_user_header(auth_service, user)
     if not user.accepted_terms:
         render_consent(auth_service, user.id)
 
     menu = create_sidebar()
-    st.title(APP_NAME)
+    render_app_header(
+        title=menu,
+        subtitle="Análise exploratória, machine learning e insights em um fluxo seguro.",
+        user_label=f"{user.username} · {user.role.value}",
+    )
 
     if menu == "Banco de Dados":
         if not has_permission(user.role, Role.ADMIN):
@@ -69,7 +81,11 @@ def main() -> None:
     uploaded_file = st.file_uploader("Selecione um arquivo", type=SUPPORTED_FILES)
 
     if uploaded_file is None:
-        st.info("Faça o upload de um arquivo.")
+        render_empty_state(
+            "Nenhum dataset carregado",
+            "Envie um arquivo CSV, Excel ou JSON para começar a análise segura.",
+            icon="📁",
+        )
         st.stop()
 
     try:

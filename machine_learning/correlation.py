@@ -3,6 +3,7 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+from ui.theme import apply_plotly_theme
 
 
 def calculate_correlation_matrix(
@@ -51,4 +52,4 @@ def show_correlation(df: pd.DataFrame) -> None:
         title=f"Heatmap ({metodo.title()})",
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(apply_plotly_theme(fig), use_container_width=True)

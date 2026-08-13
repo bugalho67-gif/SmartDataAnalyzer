@@ -1,5 +1,6 @@
 import streamlit as st
 import plotly.express as px
+from ui.theme import apply_plotly_theme
 
 
 def auto_chart(df):
@@ -27,6 +28,6 @@ def auto_chart(df):
         )
 
     st.plotly_chart(
-        fig,
+        apply_plotly_theme(fig),
         use_container_width=True
     )

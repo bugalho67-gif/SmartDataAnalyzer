@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from ui.theme import apply_plotly_theme
 
 
 def show_importance(modelo, X):
@@ -32,7 +33,7 @@ def show_importance(modelo, X):
     )
 
     st.plotly_chart(
-        fig,
+        apply_plotly_theme(fig),
         use_container_width=True
     )
 

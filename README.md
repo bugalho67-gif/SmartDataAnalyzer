@@ -131,6 +131,18 @@ Análise automática de:
 
 ---
 
+# 🎨 Design premium
+
+A Fase 3 adiciona uma camada visual SaaS sobre o Streamlit sem trocar o framework:
+
+- Design system em `ui/theme.css` com fonte Inter, paleta slate/indigo/emerald/rose, cards arredondados, sombras sutis e transições de hover.
+- Toggle global de modo escuro persistido em `st.session_state`.
+- Header contextual com usuário autenticado e estado vazio elegante para o fluxo inicial de upload.
+- Tema Plotly centralizado para gráficos claros/escuros, com paleta consistente, fonte Inter, margens maiores e grids menos agressivos.
+- Ajustes responsivos para reduzir a aparência de app genérico em telas menores.
+
+---
+
 # 🤖 Inteligência Artificial
 
 O projeto possui uma arquitetura preparada para múltiplos provedores de IA.

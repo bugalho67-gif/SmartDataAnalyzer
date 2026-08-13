@@ -3,6 +3,7 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+from ui.theme import apply_plotly_theme
 
 
 def detect_outliers_iqr(df: pd.DataFrame, column: str) -> pd.DataFrame:
@@ -95,4 +96,4 @@ def show_outliers(df: pd.DataFrame) -> None:
     st.dataframe(outliers, use_container_width=True)
 
     fig = px.box(df, y=coluna, points="all")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(apply_plotly_theme(fig), use_container_width=True)
