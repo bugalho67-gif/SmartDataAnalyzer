@@ -9,11 +9,7 @@ class AIClient(ABC):
     """
 
     @abstractmethod
-    def ask(
-        self,
-        question: str,
-        context: str
-    ) -> str:
+    def ask(self, question: str, context: str) -> str:
         """
         Recebe uma pergunta e o contexto
         dos dados e devolve uma resposta.

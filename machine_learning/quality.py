@@ -23,11 +23,7 @@ def calculate_quality_metrics(df: pd.DataFrame) -> dict:
     nulos = int(df.isnull().sum().sum())
     duplicados = int(df.duplicated().sum())
 
-    porcentagem = (
-        round(((celulas - nulos) / celulas) * 100, 2)
-        if celulas > 0
-        else 0.0
-    )
+    porcentagem = round(((celulas - nulos) / celulas) * 100, 2) if celulas > 0 else 0.0
 
     return {
         "quality_pct": porcentagem,

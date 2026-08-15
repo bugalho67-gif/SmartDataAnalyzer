@@ -8,39 +8,15 @@ def build_context(df):
     info = analyze_dataframe(df)
 
     contexto = {
-
         "dataset": {
-
             "rows": info["rows"],
-
             "columns": info["columns"],
-
-            "memory": info["memory_mb"]
-
+            "memory": info["memory_mb"],
         },
-
-        "quality": {
-
-            "missing": info["missing"],
-
-            "duplicates": info["duplicates"]
-
-        },
-
+        "quality": {"missing": info["missing"], "duplicates": info["duplicates"]},
         "numeric": info["numeric_summary"],
-
         "categorical": info["categorical_summary"],
-
-        "recommendations": info["recommendations"]
-
+        "recommendations": info["recommendations"],
     }
 
-    return json.dumps(
-
-        contexto,
-
-        ensure_ascii=False,
-
-        indent=4
-
-    )
+    return json.dumps(contexto, ensure_ascii=False, indent=4)

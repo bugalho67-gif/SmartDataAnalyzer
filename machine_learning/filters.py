@@ -9,21 +9,12 @@ def apply_filters(df: pd.DataFrame):
     dataframe = df.copy()
 
     for coluna in dataframe.columns:
-
         if dataframe[coluna].dtype == "object":
-
             valores = dataframe[coluna].dropna().unique()
 
             if len(valores) <= 30:
+                selecionados = st.sidebar.multiselect(coluna, valores, default=valores)
 
-                selecionados = st.sidebar.multiselect(
-                    coluna,
-                    valores,
-                    default=valores
-                )
-
-                dataframe = dataframe[
-                    dataframe[coluna].isin(selecionados)
-                ]
+                dataframe = dataframe[dataframe[coluna].isin(selecionados)]
 
     return dataframe

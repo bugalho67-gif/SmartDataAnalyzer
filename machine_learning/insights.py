@@ -26,33 +26,41 @@ def build_insights(df: pd.DataFrame) -> list[dict]:
     linhas = len(df)
     colunas = len(df.columns)
 
-    insights.append({
-        "type": "success",
-        "message": f"O conjunto possui {linhas:,} registros e {colunas} colunas.",
-    })
+    insights.append(
+        {
+            "type": "success",
+            "message": f"O conjunto possui {linhas:,} registros e {colunas} colunas.",
+        }
+    )
 
     nulos = df.isnull().sum()
     if nulos.sum():
         coluna = nulos.idxmax()
-        insights.append({
-            "type": "warning",
-            "message": f"A coluna '{coluna}' possui {nulos.max()} valores ausentes.",
-        })
+        insights.append(
+            {
+                "type": "warning",
+                "message": f"A coluna '{coluna}' possui {nulos.max()} valores ausentes.",
+            }
+        )
 
     duplicados = df.duplicated().sum()
     if duplicados:
-        insights.append({
-            "type": "warning",
-            "message": f"Foram encontrados {duplicados} registros duplicados.",
-        })
+        insights.append(
+            {
+                "type": "warning",
+                "message": f"Foram encontrados {duplicados} registros duplicados.",
+            }
+        )
 
     numericas = df.select_dtypes(include="number")
     if len(numericas.columns):
         maior = numericas.std().idxmax()
-        insights.append({
-            "type": "info",
-            "message": f"A coluna '{maior}' apresenta a maior dispersão.",
-        })
+        insights.append(
+            {
+                "type": "info",
+                "message": f"A coluna '{maior}' apresenta a maior dispersão.",
+            }
+        )
 
         if len(numericas.columns) >= 2:
             correlacao = numericas.corr()
@@ -62,10 +70,12 @@ def build_insights(df: pd.DataFrame) -> list[dict]:
             ] = 0
 
             maior_corr = correlacao.abs().stack().idxmax()
-            insights.append({
-                "type": "success",
-                "message": f"Maior correlação entre {maior_corr[0]} e {maior_corr[1]}.",
-            })
+            insights.append(
+                {
+                    "type": "success",
+                    "message": f"Maior correlação entre {maior_corr[0]} e {maior_corr[1]}.",
+                }
+            )
 
     return insights
 

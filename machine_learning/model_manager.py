@@ -11,11 +11,7 @@ MODELS_DIR = EXPORTS_DIR / "models"
 MODELS_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def save_model(
-    model,
-    model_name: str = "modelo",
-    metadata: dict | None = None
-):
+def save_model(model, model_name: str = "modelo", metadata: dict | None = None):
     """
     Salva um modelo treinado e seus metadados.
     """
@@ -28,19 +24,14 @@ def save_model(
     info = {
         "nome": model_name,
         "data": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-        "arquivo": str(model_path)
+        "arquivo": str(model_path),
     }
 
     if metadata:
         info.update(metadata)
 
     with open(metadata_path, "w", encoding="utf-8") as f:
-        json.dump(
-            info,
-            f,
-            indent=4,
-            ensure_ascii=False
-        )
+        json.dump(info, f, indent=4, ensure_ascii=False)
 
     return model_path
 
@@ -53,9 +44,7 @@ def load_model(model_name: str = "modelo"):
     model_path = MODELS_DIR / f"{model_name}.pkl"
 
     if not model_path.exists():
-        raise FileNotFoundError(
-            f"Modelo '{model_name}' não encontrado."
-        )
+        raise FileNotFoundError(f"Modelo '{model_name}' não encontrado.")
 
     return joblib.load(model_path)
 
@@ -65,10 +54,7 @@ def list_models():
     Lista todos os modelos disponíveis.
     """
 
-    return sorted(
-        arquivo.stem
-        for arquivo in MODELS_DIR.glob("*.pkl")
-    )
+    return sorted(arquivo.stem for arquivo in MODELS_DIR.glob("*.pkl"))
 
 
 def load_metadata(model_name: str = "modelo"):

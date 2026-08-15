@@ -12,7 +12,6 @@ from database.database_manager import connect_database
 
 
 PAGES = {
-
     "Dashboard": show_dashboard,
     "Dashboard Inteligente": suggest_chart,
     "Estatísticas": show_statistics,
@@ -23,6 +22,5 @@ PAGES = {
     "Insights": generate_insights,
     "Assistente IA": show_chat,
     "Exportar": show_export,
-    "Banco de Dados": connect_database
-
+    "Banco de Dados": connect_database,
 }
