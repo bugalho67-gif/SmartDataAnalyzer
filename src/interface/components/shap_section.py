@@ -12,7 +12,9 @@ def render_shap_section(dataset) -> None:
 
     ml_results = st.session_state.get("ml_results")
     if not ml_results:
-        st.info("Train a model in the Machine Learning tab first to enable SHAP explanations.")
+        st.info(
+            "Train a model in the Machine Learning tab first to enable SHAP explanations."
+        )
         return
 
     model_id = ml_results.get("model_id")
@@ -22,7 +24,9 @@ def render_shap_section(dataset) -> None:
 
     shap_service = SHAPService()
 
-    action = st.radio("Action", ["Global Explanation", "Single Prediction"], horizontal=True)
+    action = st.radio(
+        "Action", ["Global Explanation", "Single Prediction"], horizontal=True
+    )
 
     if action == "Global Explanation":
         sample_size = st.slider("Sample size for SHAP", 10, 500, 100)
@@ -35,10 +39,12 @@ def render_shap_section(dataset) -> None:
                     st.success(f"Explained using {results['sample_size']} samples")
 
                     # Feature importance chart
-                    fi_df = pd.DataFrame([
-                        {"Feature": k, "Mean |SHAP|": v}
-                        for k, v in results["feature_importance"].items()
-                    ])
+                    fi_df = pd.DataFrame(
+                        [
+                            {"Feature": k, "Mean |SHAP|": v}
+                            for k, v in results["feature_importance"].items()
+                        ]
+                    )
                     st.bar_chart(fi_df.set_index("Feature"))
 
                     # Detailed table

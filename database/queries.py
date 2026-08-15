@@ -3,10 +3,7 @@ import pandas as pd
 
 def execute_query(engine, sql):
 
-    return pd.read_sql(
-        sql,
-        engine
-    )
+    return pd.read_sql(sql, engine)
 
 
 def list_tables(engine):
@@ -21,7 +18,4 @@ def list_tables(engine):
 
     """
 
-    return pd.read_sql(
-        consulta,
-        engine
-    )
+    return pd.read_sql(consulta, engine)

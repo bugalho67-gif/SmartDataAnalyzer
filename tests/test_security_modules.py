@@ -29,7 +29,9 @@ def test_password_hash_roundtrip() -> None:
 
 def test_auth_service_register_and_authenticate(tmp_path) -> None:
     service = AuthService(tmp_path / "security.db")
-    service.register_user("Analista", "analista@example.com", "senha12345", Role.ANALYST)
+    service.register_user(
+        "Analista", "analista@example.com", "senha12345", Role.ANALYST
+    )
 
     session = service.authenticate("analista@example.com", "senha12345")
 

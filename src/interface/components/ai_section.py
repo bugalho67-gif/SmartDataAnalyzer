@@ -10,6 +10,7 @@ def render_ai_section(dataset, use_case) -> None:
     st.subheader("🧠 AI-Powered Analysis")
 
     from src.application.services.ai_service import AIService
+
     providers = AIService().get_available_providers()
 
     if not providers:
@@ -33,9 +34,7 @@ def render_ai_section(dataset, use_case) -> None:
                         use_case.execute_ai_analysis(dataset, question)
                     )
                 else:
-                    response = run_async(
-                        use_case.execute_ai_insights(dataset)
-                    )
+                    response = run_async(use_case.execute_ai_insights(dataset))
 
                 st.markdown("### Analysis Results")
                 st.markdown(response)
@@ -44,4 +43,3 @@ def render_ai_section(dataset, use_case) -> None:
             except Exception as e:
                 st.error(f"AI analysis failed: {str(e)}")
                 st.info("Check your API key configuration in .env file")
-                

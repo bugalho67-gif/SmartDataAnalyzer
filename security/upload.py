@@ -67,7 +67,9 @@ def validate_upload_file(file: BinaryIO, max_size_mb: int = MAX_UPLOAD_SIZE_MB) 
 
     expected_headers = _MAGIC_BYTES[extension]
     if expected_headers != (b"",) and not head.lstrip().startswith(expected_headers):
-        raise ValidationError("Assinatura do arquivo incompatível com a extensão informada.")
+        raise ValidationError(
+            "Assinatura do arquivo incompatível com a extensão informada."
+        )
 
     if extension in {".csv", ".json", ".xml"} and has_formula_injection(head):
         raise ValidationError("Possível CSV/Formula Injection detectada no arquivo.")
@@ -77,7 +79,7 @@ def has_formula_injection(content: bytes) -> bool:
     """Detecta células iniciadas por caracteres perigosos em amostra textual."""
     text = content.decode("utf-8", errors="ignore")
     for line in text.splitlines():
-        cells = [cell.strip().strip('"\'') for cell in line.split(",")]
+        cells = [cell.strip().strip("\"'") for cell in line.split(",")]
         if any(cell.startswith(DANGEROUS_PREFIXES) for cell in cells if cell):
             return True
     return False

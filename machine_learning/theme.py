@@ -3,10 +3,4 @@ import streamlit as st
 
 def choose_theme():
 
-    return st.sidebar.selectbox(
-        "Tema",
-        [
-            "Escuro",
-            "Claro"
-        ]
-    )
+    return st.sidebar.selectbox("Tema", ["Escuro", "Claro"])

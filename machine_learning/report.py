@@ -21,10 +21,7 @@ def summary(df: pd.DataFrame) -> str:
     return texto
 
 
-def generate_pdf(
-    df: pd.DataFrame,
-    filename: str = "exports/relatorio.pdf"
-):
+def generate_pdf(df: pd.DataFrame, filename: str = "exports/relatorio.pdf"):
 
     # Cria a pasta exports caso ela não exista
     Path("exports").mkdir(exist_ok=True)
@@ -35,73 +32,41 @@ def generate_pdf(
 
     elementos = []
 
-    elementos.append(
-        Paragraph(
-            "Smart Data Analyzer",
-            styles["Title"]
-        )
-    )
+    elementos.append(Paragraph("Smart Data Analyzer", styles["Title"]))
 
     elementos.append(
         Paragraph(
             f"Data de geração: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}",
-            styles["Normal"]
+            styles["Normal"],
+        )
+    )
+
+    elementos.append(Paragraph("<br/><b>Resumo Executivo</b>", styles["Heading2"]))
+
+    elementos.append(Paragraph(summary(df), styles["BodyText"]))
+
+    elementos.append(Paragraph("<br/><b>Informações Gerais</b>", styles["Heading2"]))
+
+    elementos.append(Paragraph(f"Quantidade de linhas: {len(df)}", styles["Normal"]))
+
+    elementos.append(
+        Paragraph(f"Quantidade de colunas: {len(df.columns)}", styles["Normal"])
+    )
+
+    elementos.append(
+        Paragraph(f"Valores nulos: {int(df.isnull().sum().sum())}", styles["Normal"])
+    )
+
+    elementos.append(
+        Paragraph(
+            f"Registros duplicados: {int(df.duplicated().sum())}", styles["Normal"]
         )
     )
 
     elementos.append(
         Paragraph(
-            "<br/><b>Resumo Executivo</b>",
-            styles["Heading2"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            summary(df),
-            styles["BodyText"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            "<br/><b>Informações Gerais</b>",
-            styles["Heading2"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"Quantidade de linhas: {len(df)}",
-            styles["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"Quantidade de colunas: {len(df.columns)}",
-            styles["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"Valores nulos: {int(df.isnull().sum().sum())}",
-            styles["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"Registros duplicados: {int(df.duplicated().sum())}",
-            styles["Normal"]
-        )
-    )
-
-    elementos.append(
-        Paragraph(
-            f"Uso de memória: {round(df.memory_usage(deep=True).sum()/1024,2)} KB",
-            styles["Normal"]
+            f"Uso de memória: {round(df.memory_usage(deep=True).sum() / 1024, 2)} KB",
+            styles["Normal"],
         )
     )
 

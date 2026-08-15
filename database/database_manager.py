@@ -3,7 +3,6 @@ import streamlit as st
 from database.connections import DatabaseConnection
 from database.queries import (
     execute_query,
-    list_tables,
 )
 from core.exceptions import DatabaseError, show_error
 
@@ -11,21 +10,10 @@ from core.exceptions import DatabaseError, show_error
 def connect_database():
     st.header("🗄 Banco de Dados")
 
-    tipo = st.selectbox(
-        "Banco",
-        [
-            "SQLite",
-            "PostgreSQL",
-            "MySQL",
-            "SQL Server"
-        ]
-    )
+    tipo = st.selectbox("Banco", ["SQLite", "PostgreSQL", "MySQL", "SQL Server"])
 
     if tipo == "SQLite":
-        arquivo = st.text_input(
-            "Arquivo .db",
-            value="smartdata.db"
-        )
+        arquivo = st.text_input("Arquivo .db", value="smartdata.db")
         if st.button("Conectar"):
             try:
                 engine = DatabaseConnection.sqlite(arquivo)
@@ -35,16 +23,10 @@ def connect_database():
                 show_error(DatabaseError(f"Falha ao conectar no SQLite: {exc}"))
     else:
         host = st.text_input("Host")
-        porta = st.number_input(
-            "Porta",
-            value=5432
-        )
+        porta = st.number_input("Porta", value=5432)
         banco = st.text_input("Banco")
         usuario = st.text_input("Usuário")
-        senha = st.text_input(
-            "Senha",
-            type="password"
-        )
+        senha = st.text_input("Senha", type="password")
 
         if st.button("Conectar"):
             try:
@@ -57,9 +39,7 @@ def connect_database():
                         host, porta, banco, usuario, senha
                     )
                 else:
-                    engine = DatabaseConnection.sqlserver(
-                        host, banco, usuario, senha
-                    )
+                    engine = DatabaseConnection.sqlserver(host, banco, usuario, senha)
 
                 # Testa a conexão
                 with engine.connect() as conn:
@@ -75,17 +55,11 @@ def connect_database():
         st.divider()
         st.subheader("Consulta SQL")
 
-        sql = st.text_area(
-            "SQL",
-            "SELECT * FROM tabela LIMIT 100"
-        )
+        sql = st.text_area("SQL", "SELECT * FROM tabela LIMIT 100")
 
         if st.button("Executar"):
             try:
-                df = execute_query(
-                    st.session_state["engine"],
-                    sql
-                )
+                df = execute_query(st.session_state["engine"], sql)
                 st.dataframe(df)
             except Exception as exc:
                 show_error(DatabaseError(f"Erro na consulta: {exc}"))

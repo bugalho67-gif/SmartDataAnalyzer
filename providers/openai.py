@@ -20,8 +20,10 @@ class OpenAIProvider(BaseProvider):
     ) -> None:
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         self.model = model or os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-        self.temperature = temperature if temperature is not None else float(
-            os.getenv("AI_TEMPERATURE", "0.2")
+        self.temperature = (
+            temperature
+            if temperature is not None
+            else float(os.getenv("AI_TEMPERATURE", "0.2"))
         )
 
         if not self.api_key:

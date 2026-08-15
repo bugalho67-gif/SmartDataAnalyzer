@@ -28,7 +28,7 @@ def build_context(df: pd.DataFrame) -> str:
 Resumo do conjunto de dados:
 - Registros: {linhas}
 - Colunas: {colunas}
-- Colunas disponíveis: {', '.join(df.columns)}
+- Colunas disponíveis: {", ".join(df.columns)}
 - Tipos de dados:
 {df.dtypes.to_string()}
 

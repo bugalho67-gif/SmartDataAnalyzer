@@ -247,4 +247,5 @@ PREMIUM_CSS = """
 def inject_custom_css() -> None:
     """Inject premium CSS into Streamlit app."""
     import streamlit as st
+
     st.markdown(PREMIUM_CSS, unsafe_allow_html=True)

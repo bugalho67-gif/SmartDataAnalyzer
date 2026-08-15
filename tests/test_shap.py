@@ -9,11 +9,13 @@ from src.domain.entities.dataset import Dataset
 
 @pytest.fixture
 def sample_dataset():
-    df = pd.DataFrame({
-        "feature_a": np.random.randn(100),
-        "feature_b": np.random.randn(100),
-        "target": np.random.randint(0, 2, 100),
-    })
+    df = pd.DataFrame(
+        {
+            "feature_a": np.random.randn(100),
+            "feature_b": np.random.randn(100),
+            "target": np.random.randint(0, 2, 100),
+        }
+    )
     return Dataset(
         id="test-shap",
         name="test.csv",
@@ -25,6 +27,7 @@ def sample_dataset():
 def test_shap_service_import():
     """Test that SHAP service can be instantiated."""
     from src.application.services.shap_service import SHAPService
+
     service = SHAPService()
     assert service is not None
 

@@ -27,7 +27,10 @@ def detect_sensitive_columns(df: pd.DataFrame) -> list[str]:
     detected: list[str] = []
     for column in df.columns:
         column_name = str(column)
-        if any(pattern.search(column_name) for pattern in SENSITIVE_COLUMN_PATTERNS.values()):
+        if any(
+            pattern.search(column_name)
+            for pattern in SENSITIVE_COLUMN_PATTERNS.values()
+        ):
             detected.append(column_name)
             continue
 
@@ -38,7 +41,9 @@ def detect_sensitive_columns(df: pd.DataFrame) -> list[str]:
     return detected
 
 
-def anonymize_dataframe(df: pd.DataFrame, columns: list[str] | None = None) -> pd.DataFrame:
+def anonymize_dataframe(
+    df: pd.DataFrame, columns: list[str] | None = None
+) -> pd.DataFrame:
     """Substitui valores sensíveis por marcador anonimizado."""
     anonymized = df.copy()
     target_columns = columns or detect_sensitive_columns(df)

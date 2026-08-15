@@ -1,6 +1,5 @@
 """SmartDataAnalyzer - Entry Point."""
 
-import asyncio
 import sys
 from pathlib import Path
 
@@ -18,7 +17,7 @@ def main() -> None:
     """Initialize and run the Streamlit application."""
     settings = get_settings()
     configure_logging(settings)
-    
+
     st.set_page_config(
         page_title=f"{settings.app_name} v{settings.app_version}",
         page_icon="📊",
@@ -30,7 +29,7 @@ def main() -> None:
             "About": f"**{settings.app_name}** - Intelligent Data Analysis Platform",
         },
     )
-    
+
     run_app()
 
 

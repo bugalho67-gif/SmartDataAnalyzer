@@ -25,7 +25,9 @@ class GeminiProvider(BaseProvider):
             raise AIError("Configure GEMINI_API_KEY para usar o Gemini.")
 
         prompt = _messages_to_prompt(messages)
-        payload = json.dumps({"contents": [{"parts": [{"text": prompt}]}]}).encode("utf-8")
+        payload = json.dumps({"contents": [{"parts": [{"text": prompt}]}]}).encode(
+            "utf-8"
+        )
         query = urllib.parse.urlencode({"key": self.api_key})
         request = urllib.request.Request(
             "https://generativelanguage.googleapis.com/v1beta/models/"
@@ -44,8 +46,12 @@ class GeminiProvider(BaseProvider):
         if not candidates:
             return "Sem resposta."
         parts = candidates[0].get("content", {}).get("parts", [])
-        return "\n".join(part.get("text", "") for part in parts).strip() or "Sem resposta."
+        return (
+            "\n".join(part.get("text", "") for part in parts).strip() or "Sem resposta."
+        )
 
 
 def _messages_to_prompt(messages: list[Message]) -> str:
-    return "\n\n".join(f"{message['role']}: {message['content']}" for message in messages)
+    return "\n\n".join(
+        f"{message['role']}: {message['content']}" for message in messages
+    )

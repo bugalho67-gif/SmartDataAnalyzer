@@ -18,6 +18,7 @@ def render_export_section(dataset, results, use_case) -> None:
         if st.button("📥 Export Dataset"):
             try:
                 from src.application.services.export_service import ExportService
+
                 service = ExportService()
                 path = service.export_dataset(dataset, ExportFormat(fmt))
                 st.success(f"Exported to: `{path}`")
@@ -33,9 +34,12 @@ def render_export_section(dataset, results, use_case) -> None:
             with st.spinner("Generating report..."):
                 try:
                     from src.application.services.export_service import ExportService
+
                     service = ExportService()
 
-                    ai_text = st.session_state.get("ai_insights") if include_ai else None
+                    ai_text = (
+                        st.session_state.get("ai_insights") if include_ai else None
+                    )
                     ml_res = st.session_state.get("ml_results") if include_ml else None
 
                     path = service.generate_pdf_report(

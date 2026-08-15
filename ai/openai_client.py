@@ -4,7 +4,6 @@ from ai.ai_client import AIClient
 
 
 class OpenAIClient(AIClient):
-
     """
     Cliente OpenAI.
 
@@ -12,19 +11,10 @@ class OpenAIClient(AIClient):
     quando a API for configurada.
     """
 
-    def __init__(
-        self,
-        api_key: str
-    ):
+    def __init__(self, api_key: str):
 
         self.api_key = api_key
 
-    def ask(
-        self,
-        question: str,
-        context: str
-    ) -> str:
+    def ask(self, question: str, context: str) -> str:
 
-        raise NotImplementedError(
-            "Integração OpenAI ainda não implementada."
-        )
+        raise NotImplementedError("Integração OpenAI ainda não implementada.")

@@ -48,7 +48,11 @@ def apply_global_theme() -> None:
 
 def plotly_template() -> str:
     """Retorna o template Plotly compatível com o tema atual."""
-    return PLOTLY_DARK_TEMPLATE if st.session_state.get("dark_mode") else PLOTLY_LIGHT_TEMPLATE
+    return (
+        PLOTLY_DARK_TEMPLATE
+        if st.session_state.get("dark_mode")
+        else PLOTLY_LIGHT_TEMPLATE
+    )
 
 
 def apply_plotly_theme(fig: go.Figure) -> go.Figure:
@@ -56,10 +60,19 @@ def apply_plotly_theme(fig: go.Figure) -> go.Figure:
     fig.update_layout(
         template=plotly_template(),
         colorway=PLOTLY_COLORWAY,
-        font={"family": "Inter, sans-serif", "color": "#f1f5f9" if st.session_state.get("dark_mode") else "#1e293b"},
+        font={
+            "family": "Inter, sans-serif",
+            "color": "#f1f5f9" if st.session_state.get("dark_mode") else "#1e293b",
+        },
         title={"x": 0.02, "xanchor": "left"},
         margin={"l": 32, "r": 24, "t": 64, "b": 32},
-        legend={"orientation": "h", "yanchor": "bottom", "y": 1.02, "xanchor": "right", "x": 1},
+        legend={
+            "orientation": "h",
+            "yanchor": "bottom",
+            "y": 1.02,
+            "xanchor": "right",
+            "x": 1,
+        },
     )
     fig.update_xaxes(showgrid=False, zeroline=False)
     fig.update_yaxes(gridcolor="rgba(148, 163, 184, 0.18)", zeroline=False)

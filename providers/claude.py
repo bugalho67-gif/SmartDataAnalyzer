@@ -50,10 +50,15 @@ class ClaudeProvider(BaseProvider):
             raise AIError("Erro ao consultar Claude.") from exc
 
         blocks = data.get("content", [])
-        return "\n".join(block.get("text", "") for block in blocks).strip() or "Sem resposta."
+        return (
+            "\n".join(block.get("text", "") for block in blocks).strip()
+            or "Sem resposta."
+        )
 
 
 def _split_system_messages(messages: list[Message]) -> tuple[str, list[Message]]:
-    system_parts = [message["content"] for message in messages if message["role"] == "system"]
+    system_parts = [
+        message["content"] for message in messages if message["role"] == "system"
+    ]
     chat_messages = [message for message in messages if message["role"] != "system"]
     return "\n\n".join(system_parts), chat_messages

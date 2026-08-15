@@ -64,7 +64,9 @@ class AuthService:
         username = username.strip()
         email = email.strip().lower()
         if not username or not email or len(password) < 8:
-            raise ValueError("Informe nome, e-mail e senha com pelo menos 8 caracteres.")
+            raise ValueError(
+                "Informe nome, e-mail e senha com pelo menos 8 caracteres."
+            )
 
         password_hash = hash_password(password)
         user_role = normalize_role(role)
@@ -132,7 +134,9 @@ class AuthService:
                 connection.commit()
                 return None
 
-            new_expiration = datetime.now(UTC) + timedelta(minutes=DEFAULT_SESSION_MINUTES)
+            new_expiration = datetime.now(UTC) + timedelta(
+                minutes=DEFAULT_SESSION_MINUTES
+            )
             connection.execute(
                 "UPDATE sessions SET expires_at = ?, last_activity = ? WHERE token = ?",
                 (new_expiration.isoformat(), datetime.now(UTC).isoformat(), token),
@@ -152,7 +156,9 @@ class AuthService:
     def accept_terms(self, user_id: int) -> None:
         """Marca o termo de consentimento LGPD como aceito pelo usuário."""
         with self._connect() as connection:
-            connection.execute("UPDATE users SET accepted_terms = 1 WHERE id = ?", (user_id,))
+            connection.execute(
+                "UPDATE users SET accepted_terms = 1 WHERE id = ?", (user_id,)
+            )
             connection.commit()
 
     def current_user(self) -> User | None:
