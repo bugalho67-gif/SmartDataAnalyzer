@@ -18,11 +18,12 @@ def render_export_section(dataset, results, use_case) -> None:
         if st.button("📥 Export Dataset"):
             try:
                 from src.application.services.export_service import ExportService
+
                 service = ExportService()
                 path = service.export_dataset(dataset, ExportFormat(fmt))
                 st.success(f"Exported to: `{path}`")
-            except Exception as e:
-                st.error(f"Export failed: {str(e)}")
+            except (ImportError, OSError, RuntimeError, TypeError, ValueError) as e:
+                st.error(f"Export failed: {e!s}")
 
     with col2:
         st.markdown("**PDF Report**")
@@ -33,9 +34,12 @@ def render_export_section(dataset, results, use_case) -> None:
             with st.spinner("Generating report..."):
                 try:
                     from src.application.services.export_service import ExportService
+
                     service = ExportService()
 
-                    ai_text = st.session_state.get("ai_insights") if include_ai else None
+                    ai_text = (
+                        st.session_state.get("ai_insights") if include_ai else None
+                    )
                     ml_res = st.session_state.get("ml_results") if include_ml else None
 
                     path = service.generate_pdf_report(
@@ -45,5 +49,5 @@ def render_export_section(dataset, results, use_case) -> None:
                         ai_insights=ai_text,
                     )
                     st.success(f"Report saved: `{path}`")
-                except Exception as e:
-                    st.error(f"PDF generation failed: {str(e)}")
+                except (ImportError, OSError, RuntimeError, TypeError, ValueError) as e:
+                    st.error(f"PDF generation failed: {e!s}")

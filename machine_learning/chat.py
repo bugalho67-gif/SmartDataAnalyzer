@@ -16,9 +16,7 @@ def show_chat(df):
     initialize_chat()
     show_history()
 
-    pergunta = st.chat_input(
-        "Faça uma pergunta sobre seus dados..."
-    )
+    pergunta = st.chat_input("Faça uma pergunta sobre seus dados...")
 
     if not pergunta:
         return
@@ -35,13 +33,12 @@ def show_chat(df):
         add_message(
             "assistant",
             "⚠️ Não foi possível obter uma resposta. "
-            "Verifique a configuração do provedor de IA."
+            "Verifique a configuração do provedor de IA.",
         )
-    except Exception as erro:
+    except (KeyError, OSError, RuntimeError, TypeError, ValueError) as erro:
         show_error(erro)
         add_message(
-            "assistant",
-            "⚠️ Ocorreu um erro inesperado ao processar sua pergunta."
+            "assistant", "⚠️ Ocorreu um erro inesperado ao processar sua pergunta."
         )
 
     st.rerun()

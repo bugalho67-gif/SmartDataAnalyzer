@@ -8,7 +8,7 @@ from src.config.settings import get_settings
 def render_sidebar() -> None:
     """Render application sidebar."""
     settings = get_settings()
-    
+
     with st.sidebar:
         st.markdown(
             f"""
@@ -23,16 +23,17 @@ def render_sidebar() -> None:
             """,
             unsafe_allow_html=True,
         )
-        
+
         st.markdown("---")
-        
+
         # Navigation / Settings
         st.subheader("⚙️ Settings")
-        
+
         # AI Provider selection
         from src.application.services.ai_service import AIService
+
         available = AIService().get_available_providers()
-        
+
         if available:
             selected = st.selectbox(
                 "AI Provider",
@@ -40,12 +41,12 @@ def render_sidebar() -> None:
                 index=0,
             )
             st.session_state["ai_provider"] = selected
-        
+
         # Theme toggle placeholder
         st.toggle("Dark Mode (Beta)", value=False, disabled=True)
-        
+
         st.markdown("---")
-        
+
         # Info
         st.markdown(
             """

@@ -1,90 +1,32 @@
+"""Compatibilidade com a factory antiga de IA."""
+
 from __future__ import annotations
 
-import os
-
+from ai.llm_factory import available_providers, create_llm_provider
 from providers.base import BaseProvider
-from providers.local import LocalProvider
-from providers.openai import OpenAIProvider
-
-# Descomente quando implementar os provedores
-#
-# from providers.gemini_provider import GeminiProvider
-# from providers.ollama_provider import OllamaProvider
 
 
 class AIProviderFactory:
-    """
-    Responsável por instanciar o provedor de IA
-    configurado na aplicação.
-    """
-
-    _providers = {
-        "local": LocalProvider,
-        "openai": OpenAIProvider,
-        # "gemini": GeminiProvider,
-        # "ollama": OllamaProvider,
-    }
+    """Facade compatível com versões anteriores da aplicação."""
 
     @classmethod
     def available_providers(cls) -> list[str]:
-        """
-        Retorna os provedores registrados.
-        """
-        return sorted(cls._providers.keys())
+        """Retorna os provedores registrados."""
+        return available_providers()
 
     @classmethod
-    def register(
-        cls,
-        name: str,
-        provider: type[BaseProvider]
-    ) -> None:
-        """
-        Permite registrar novos provedores
-        dinamicamente.
-        """
-        cls._providers[name.lower()] = provider
+    def register(cls, name: str, provider: type[BaseProvider]) -> None:
+        """Mantido apenas por compatibilidade; use `ai.llm_factory` em código novo."""
+        from ai.llm_factory import _PROVIDER_REGISTRY
+
+        _PROVIDER_REGISTRY[name.lower()] = provider
 
     @classmethod
-    def create(
-        cls,
-        provider_name: str | None = None
-    ) -> BaseProvider:
-        """
-        Cria uma instância do provedor escolhido.
-
-        Caso nenhum seja informado, utiliza a variável
-        de ambiente AI_PROVIDER.
-
-        Se o provedor não existir, utiliza LocalProvider.
-        """
-        if provider_name is None:
-            provider_name = os.getenv(
-                "AI_PROVIDER",
-                "local"
-            )
-
-        provider_name = provider_name.lower()
-
-        provider_class = cls._providers.get(
-            provider_name,
-            LocalProvider
-        )
-
-        return provider_class()
+    def create(cls, provider_name: str | None = None) -> BaseProvider:
+        """Cria uma instância do provedor escolhido."""
+        return create_llm_provider(provider_name)
 
 
-def get_provider(
-    provider_name: str | None = None
-) -> BaseProvider:
-    """
-    Função auxiliar para manter a API simples.
-
-    Exemplo:
-
-    provider = get_provider()
-
-    ou
-
-    provider = get_provider("openai")
-    """
+def get_provider(provider_name: str | None = None) -> BaseProvider:
+    """Função auxiliar para manter a API legada simples."""
     return AIProviderFactory.create(provider_name)

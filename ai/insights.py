@@ -24,24 +24,22 @@ def insights(df):
     # ==========================================
 
     if info["numeric_summary"]:
-
         texto.append("## 🔢 Colunas Numéricas")
 
         for coluna, dados in info["numeric_summary"].items():
-
             texto.append(
                 f"""
 ### {coluna}
 
-• Média: {dados['mean']:.2f}
+• Média: {dados["mean"]:.2f}
 
-• Mediana: {dados['median']:.2f}
+• Mediana: {dados["median"]:.2f}
 
-• Desvio padrão: {dados['std']:.2f}
+• Desvio padrão: {dados["std"]:.2f}
 
-• Mínimo: {dados['min']:.2f}
+• Mínimo: {dados["min"]:.2f}
 
-• Máximo: {dados['max']:.2f}
+• Máximo: {dados["max"]:.2f}
 """
             )
 
@@ -50,23 +48,21 @@ def insights(df):
     # ==========================================
 
     if info["categorical_summary"]:
-
         texto.append("")
         texto.append("## 🏷️ Colunas Categóricas")
 
         for coluna, dados in info["categorical_summary"].items():
-
             texto.append(
                 f"""
 ### {coluna}
 
-• Valores únicos: {dados['unique']}
+• Valores únicos: {dados["unique"]}
 
-• Valor mais frequente: {dados['top']}
+• Valor mais frequente: {dados["top"]}
 
-• Frequência: {dados['frequency']}
+• Frequência: {dados["frequency"]}
 
-• Valores ausentes: {dados['missing']}
+• Valores ausentes: {dados["missing"]}
 """
             )
 
@@ -75,12 +71,10 @@ def insights(df):
     # ==========================================
 
     if info["recommendations"]:
-
         texto.append("")
         texto.append("## 💡 Recomendações")
 
         for recomendacao in info["recommendations"]:
-
             texto.append(f"• {recomendacao}")
 
     return texto

@@ -2,7 +2,6 @@ from ai.ai_client import AIClient
 
 
 class LocalAIClient(AIClient):
-
     """
     Cliente local.
 
@@ -10,11 +9,7 @@ class LocalAIClient(AIClient):
     estiver configurada.
     """
 
-    def ask(
-        self,
-        question: str,
-        context: str
-    ) -> str:
+    def ask(self, question: str, context: str) -> str:
 
         resposta = f"""
 ### Pergunta

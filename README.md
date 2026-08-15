@@ -44,15 +44,18 @@ Tudo isso através de uma interface moderna, intuitiva e preparada para desktop 
 
 ## 📂 Importação de dados
 
+A Fase 5 adiciona preview seguro das primeiras 100 linhas antes do processamento completo.
+
+
 - CSV
 - Excel (.xlsx)
 - JSON
+- Parquet (depende de `pyarrow`)
+- XML
 
 Em breve:
 
-- Parquet
 - SQL
-- XML
 - API REST
 
 ---
@@ -131,23 +134,32 @@ Análise automática de:
 
 ---
 
+# 🎨 Design premium
+
+A Fase 3 adiciona uma camada visual SaaS sobre o Streamlit sem trocar o framework:
+
+- Design system em `ui/theme.css` com fonte Inter, paleta slate/indigo/emerald/rose, cards arredondados, sombras sutis e transições de hover.
+- Toggle global de modo escuro persistido em `st.session_state`.
+- Header contextual com usuário autenticado e estado vazio elegante para o fluxo inicial de upload.
+- Tema Plotly centralizado para gráficos claros/escuros, com paleta consistente, fonte Inter, margens maiores e grids menos agressivos.
+- Ajustes responsivos para reduzir a aparência de app genérico em telas menores.
+
+---
+
 # 🤖 Inteligência Artificial
 
 O projeto possui uma arquitetura preparada para múltiplos provedores de IA.
 
-Atualmente:
+Atualmente, a Fase 4 adiciona uma factory unificada em `ai/llm_factory.py` com adapters para:
 
-- Provider Local ✅
+- Local ✅
+- OpenAI ✅
+- Gemini ✅
+- Claude ✅
+- Ollama ✅
+- Azure OpenAI ✅
 
-Arquitetura preparada para:
-
-- OpenAI
-- Gemini
-- Claude
-- Ollama
-- Azure OpenAI
-
-A IA poderá responder perguntas sobre os dados, gerar diagnósticos automáticos e auxiliar na interpretação dos resultados.
+Cada adapter expõe os métodos `chat(messages)`, `generate_insights(data_summary)` e `explain_chart(chart_data)`, mantendo compatibilidade com o método legado `ask(question, context)`. Configure o provedor com `LLM_PROVIDER` ou `AI_PROVIDER` no `.env`.
 
 ---
 
@@ -219,6 +231,40 @@ Arquitetura preparada para:
 
 # 🔒 Segurança
 
+A Fase 2 começou com uma base local de segurança para reduzir riscos antes das próximas features:
+
+- Login obrigatório antes de acessar upload, análise ou banco de dados.
+- Hash de senha com PBKDF2-HMAC e salt único por usuário.
+- Sessões persistidas em SQLite com expiração por inatividade de 30 minutos.
+- RBAC com papéis `admin`, `analyst` e `viewer`.
+- Termo de consentimento LGPD no primeiro acesso autenticado.
+- Logs de auditoria em SQLite para eventos sensíveis.
+- Validação segura de upload com limite de 100 MB, rejeição de executáveis/scripts, checagem básica de magic bytes e detecção de CSV/Formula Injection.
+- Anonimização automática opcional de CPF, CNPJ, e-mail, telefone e RG.
+
+Conta administrativa local inicial:
+
+```text
+E-mail: admin@smartdataanalyzer.dev
+Senha: valor de DEFAULT_ADMIN_PASSWORD ou admin12345 em desenvolvimento
+```
+
+> Em produção, configure `DEFAULT_ADMIN_PASSWORD`, `SECRET_KEY` e chaves de provedores via `.env`, `st.secrets` ou variáveis de ambiente. Nunca commite secrets.
+
+## Variáveis de ambiente principais
+
+Consulte `.env.example` para o template completo. As variáveis mais importantes são:
+
+- `DEFAULT_ADMIN_PASSWORD`: senha inicial do admin local.
+- `SECRET_KEY`: segredo da aplicação em produção.
+- `MAX_UPLOAD_SIZE_MB`: limite de upload, com padrão seguro de 100 MB.
+- `AI_PROVIDER`, `AI_MODEL`, `OPENAI_API_KEY`: configuração dos provedores de IA.
+- `LLM_PROVIDER`: adapter ativo (`local`, `openai`, `gemini`, `claude`, `ollama` ou
+  `azure_openai`).
+- `DATABASE_URL`: conexão SQLite por padrão ou conexão externa em produção.
+- `POSTGRES_PASSWORD` e `REDIS_URL`: infraestrutura do perfil Docker `production`.
+
+
 O projeto foi desenvolvido considerando boas práticas de segurança.
 
 Recursos atuais:
@@ -229,15 +275,9 @@ Recursos atuais:
 - Tratamento de exceções
 - Upload controlado
 
-Próximas implementações:
-
-- Criptografia
-- Anonimização de dados
-- Controle de acesso
-- Auditoria
-- Sessões seguras
-- LGPD
-- Rate Limiting
+Os controles atuais incluem autenticação, RBAC, anonimização opcional, auditoria, consentimento
+LGPD, sessões com expiração, rate limiting e validação defensiva de uploads. Consulte
+[`docs/SECURITY.md`](docs/SECURITY.md) antes de publicar uma instância.
 
 ---
 
@@ -296,11 +336,30 @@ Instale as dependências.
 pip install -r requirements.txt
 ```
 
+Para contribuir e executar lint/cobertura, instale também as ferramentas de desenvolvimento:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
 Execute.
 
 ```bash
 streamlit run app.py
 ```
+
+Também é possível usar os atalhos padronizados:
+
+```bash
+make lint
+make test
+make up
+```
+
+O Nginx fica disponível em `http://localhost:8080`, e o Streamlit diretamente em
+`http://localhost:8501`. O perfil de produção (`make deploy`) exige credenciais externas e
+também inicia PostgreSQL e Redis. Veja os guias de [arquitetura](docs/ARCHITECTURE.md),
+[deploy](docs/DEPLOY.md) e [segurança](docs/SECURITY.md).
 
 ---
 
@@ -338,30 +397,30 @@ Em breve serão adicionados:
 
 - [ ] Design inspirado na Apple
 - [ ] Responsividade completa
-- [ ] Dark Mode
+- [x] Dark Mode
 - [ ] Animações suaves
-- [ ] Dashboard Premium
+- [x] Dashboard Premium
 - [ ] Assistente Inteligente
 
 ---
 
 ## Q3 — Segurança
 
-- [ ] Autenticação
-- [ ] Controle de usuários
+- [x] Autenticação
+- [ ] Gerenciamento administrativo completo de usuários
 - [ ] Criptografia
-- [ ] LGPD
-- [ ] Auditoria
+- [x] LGPD
+- [x] Auditoria
 - [ ] Backup automático
 
 ---
 
 ## Q4 — Inteligência Artificial
 
-- [ ] OpenAI
-- [ ] Gemini
-- [ ] Claude
-- [ ] Ollama
+- [x] OpenAI
+- [x] Gemini
+- [x] Claude
+- [x] Ollama
 - [ ] Chat Inteligente
 - [ ] Geração automática de dashboards
 - [ ] Explicação automática de gráficos
@@ -389,12 +448,12 @@ Em breve serão adicionados:
 | Correlação | ✅ |
 | Outliers | ✅ |
 | Qualidade | ✅ |
-| IA | 🚧 |
+| IA | ✅ |
 | Machine Learning | ✅ |
 | Banco de Dados | ✅ |
 | Exportação | ✅ |
 | Docker | ✅ |
-| Segurança | 🚧 |
+| Segurança | ✅ |
 
 ---
 

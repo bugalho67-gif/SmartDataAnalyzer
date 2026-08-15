@@ -8,14 +8,8 @@ from core.logger import logger
 def process_uploaded_file(arquivo):
 
     with st.spinner("Processando arquivo..."):
+        df = load_dataframe(DataLoader, arquivo)
 
-        df = load_dataframe(
-            DataLoader,
-            arquivo
-        )
-
-    logger.info(
-        f"Arquivo '{arquivo.name}' carregado."
-    )
+    logger.info(f"Arquivo '{arquivo.name}' carregado.")
 
     return df

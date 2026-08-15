@@ -30,62 +30,34 @@ def analyze_dataframe(df: pd.DataFrame) -> dict:
 
     resultado["shape"] = df.shape
 
-    resultado["memory_mb"] = round(
-        df.memory_usage(deep=True).sum() / 1024**2,
-        2
-    )
+    resultado["memory_mb"] = round(df.memory_usage(deep=True).sum() / 1024**2, 2)
 
     # ======================================================
     # Qualidade
     # ======================================================
 
-    resultado["missing"] = int(
-        df.isna().sum().sum()
-    )
+    resultado["missing"] = int(df.isna().sum().sum())
 
-    resultado["duplicates"] = int(
-        df.duplicated().sum()
-    )
+    resultado["duplicates"] = int(df.duplicated().sum())
 
     resultado["missing_per_column"] = (
-        df.isna()
-        .sum()
-        .sort_values(ascending=False)
-        .to_dict()
+        df.isna().sum().sort_values(ascending=False).to_dict()
     )
 
     # ======================================================
     # Tipos
     # ======================================================
 
-    numericas = list(
-        df.select_dtypes(
-            include=np.number
-        ).columns
-    )
+    numericas = list(df.select_dtypes(include=np.number).columns)
 
-    booleanas = list(
-        df.select_dtypes(
-            include="bool"
-        ).columns
-    )
+    booleanas = list(df.select_dtypes(include="bool").columns)
 
-    datas = list(
-        df.select_dtypes(
-            include="datetime"
-        ).columns
-    )
+    datas = list(df.select_dtypes(include="datetime").columns)
 
     categoricas = [
-
         c
-
         for c in df.columns
-
-        if c not in numericas
-        and c not in booleanas
-        and c not in datas
-
+        if c not in numericas and c not in booleanas and c not in datas
     ]
 
     resultado["numeric_columns"] = numericas
@@ -103,49 +75,23 @@ def analyze_dataframe(df: pd.DataFrame) -> dict:
     numeric_summary = {}
 
     for coluna in numericas:
-
         serie = df[coluna].dropna()
 
         if serie.empty:
-
             continue
 
         numeric_summary[coluna] = {
-
             "count": int(serie.count()),
-
             "mean": float(serie.mean()),
-
             "median": float(serie.median()),
-
-            "std": float(
-                serie.std()
-            ) if len(serie) > 1 else 0,
-
+            "std": float(serie.std()) if len(serie) > 1 else 0,
             "min": float(serie.min()),
-
             "max": float(serie.max()),
-
-            "q1": float(
-                serie.quantile(.25)
-            ),
-
-            "q3": float(
-                serie.quantile(.75)
-            ),
-
-            "variance": float(
-                serie.var()
-            ) if len(serie) > 1 else 0,
-
-            "skew": float(
-                serie.skew()
-            ) if len(serie) > 2 else 0,
-
-            "kurtosis": float(
-                serie.kurtosis()
-            ) if len(serie) > 3 else 0,
-
+            "q1": float(serie.quantile(0.25)),
+            "q3": float(serie.quantile(0.75)),
+            "variance": float(serie.var()) if len(serie) > 1 else 0,
+            "skew": float(serie.skew()) if len(serie) > 2 else 0,
+            "kurtosis": float(serie.kurtosis()) if len(serie) > 3 else 0,
         }
 
     resultado["numeric_summary"] = numeric_summary
@@ -157,45 +103,17 @@ def analyze_dataframe(df: pd.DataFrame) -> dict:
     categorical_summary = {}
 
     for coluna in categoricas:
-
         serie = df[coluna]
 
         moda = serie.mode()
 
         categorical_summary[coluna] = {
-
-            "unique": int(
-                serie.nunique(dropna=True)
-            ),
-
-            "missing": int(
-                serie.isna().sum()
-            ),
-
-            "top": (
-
-                str(moda.iloc[0])
-
-                if not moda.empty
-
-                else None
-
-            ),
-
+            "unique": int(serie.nunique(dropna=True)),
+            "missing": int(serie.isna().sum()),
+            "top": (str(moda.iloc[0]) if not moda.empty else None),
             "frequency": (
-
-                int(
-                    serie.value_counts(
-                        dropna=False
-                    ).iloc[0]
-                )
-
-                if len(serie) > 0
-
-                else 0
-
-            )
-
+                int(serie.value_counts(dropna=False).iloc[0]) if len(serie) > 0 else 0
+            ),
         }
 
     resultado["categorical_summary"] = categorical_summary
@@ -205,19 +123,9 @@ def analyze_dataframe(df: pd.DataFrame) -> dict:
     # ======================================================
 
     if len(numericas) >= 2:
-
-        resultado["correlation"] = (
-
-            df[numericas]
-
-            .corr(numeric_only=True)
-
-            .round(3)
-
-        )
+        resultado["correlation"] = df[numericas].corr(numeric_only=True).round(3)
 
     else:
-
         resultado["correlation"] = None
 
     # ======================================================
@@ -227,16 +135,14 @@ def analyze_dataframe(df: pd.DataFrame) -> dict:
     outliers = {}
 
     for coluna in numericas:
-
         serie = df[coluna].dropna()
 
         if serie.empty:
-
             continue
 
-        q1 = serie.quantile(.25)
+        q1 = serie.quantile(0.25)
 
-        q3 = serie.quantile(.75)
+        q3 = serie.quantile(0.75)
 
         iqr = q3 - q1
 
@@ -244,19 +150,7 @@ def analyze_dataframe(df: pd.DataFrame) -> dict:
 
         superior = q3 + 1.5 * iqr
 
-        quantidade = int(
-
-            (
-
-                (serie < inferior)
-
-                |
-
-                (serie > superior)
-
-            ).sum()
-
-        )
+        quantidade = int(((serie < inferior) | (serie > superior)).sum())
 
         outliers[coluna] = quantidade
 
@@ -269,44 +163,23 @@ def analyze_dataframe(df: pd.DataFrame) -> dict:
     recomendacoes = []
 
     if resultado["missing"] > 0:
-
-        recomendacoes.append(
-            "Existem valores ausentes que podem afetar as análises."
-        )
+        recomendacoes.append("Existem valores ausentes que podem afetar as análises.")
 
     if resultado["duplicates"] > 0:
-
-        recomendacoes.append(
-            "Foram encontrados registros duplicados."
-        )
+        recomendacoes.append("Foram encontrados registros duplicados.")
 
     if len(numericas) == 0:
-
-        recomendacoes.append(
-            "Não existem colunas numéricas."
-        )
+        recomendacoes.append("Não existem colunas numéricas.")
 
     if len(categoricas) == 0:
-
-        recomendacoes.append(
-            "Não existem colunas categóricas."
-        )
+        recomendacoes.append("Não existem colunas categóricas.")
 
     if resultado["memory_mb"] > 300:
-
-        recomendacoes.append(
-            "Dataset grande. Considere utilizar cache."
-        )
+        recomendacoes.append("Dataset grande. Considere utilizar cache.")
 
     for coluna, qtd in outliers.items():
-
         if qtd > 0:
-
-            recomendacoes.append(
-
-                f"{coluna} possui {qtd} possíveis outliers."
-
-            )
+            recomendacoes.append(f"{coluna} possui {qtd} possíveis outliers.")
 
     resultado["recommendations"] = recomendacoes
 

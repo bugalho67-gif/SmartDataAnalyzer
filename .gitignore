@@ -35,3 +35,13 @@ data/*
 # OS
 .DS_Store
 Thumbs.db
+
+# Local environment and runtime databases
+.env
+*.db
+*.sqlite
+*.sqlite3
+uploads/*
+!uploads/.gitkeep
+logs/*
+!logs/.gitkeep

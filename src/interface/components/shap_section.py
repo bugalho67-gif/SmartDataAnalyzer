@@ -4,6 +4,7 @@ import pandas as pd
 import streamlit as st
 
 from src.application.services.shap_service import SHAPService
+from src.core.exceptions import MLTrainingError
 
 
 def render_shap_section(dataset) -> None:
@@ -12,7 +13,9 @@ def render_shap_section(dataset) -> None:
 
     ml_results = st.session_state.get("ml_results")
     if not ml_results:
-        st.info("Train a model in the Machine Learning tab first to enable SHAP explanations.")
+        st.info(
+            "Train a model in the Machine Learning tab first to enable SHAP explanations."
+        )
         return
 
     model_id = ml_results.get("model_id")
@@ -22,7 +25,9 @@ def render_shap_section(dataset) -> None:
 
     shap_service = SHAPService()
 
-    action = st.radio("Action", ["Global Explanation", "Single Prediction"], horizontal=True)
+    action = st.radio(
+        "Action", ["Global Explanation", "Single Prediction"], horizontal=True
+    )
 
     if action == "Global Explanation":
         sample_size = st.slider("Sample size for SHAP", 10, 500, 100)
@@ -35,10 +40,12 @@ def render_shap_section(dataset) -> None:
                     st.success(f"Explained using {results['sample_size']} samples")
 
                     # Feature importance chart
-                    fi_df = pd.DataFrame([
-                        {"Feature": k, "Mean |SHAP|": v}
-                        for k, v in results["feature_importance"].items()
-                    ])
+                    fi_df = pd.DataFrame(
+                        [
+                            {"Feature": k, "Mean |SHAP|": v}
+                            for k, v in results["feature_importance"].items()
+                        ]
+                    )
                     st.bar_chart(fi_df.set_index("Feature"))
 
                     # Detailed table
@@ -46,8 +53,8 @@ def render_shap_section(dataset) -> None:
                         details_df = pd.DataFrame(results["feature_details"])
                         st.dataframe(details_df, use_container_width=True)
 
-                except Exception as e:
-                    st.error(f"SHAP failed: {str(e)}")
+                except (KeyError, MLTrainingError, OSError, TypeError, ValueError) as e:
+                    st.error(f"SHAP failed: {e!s}")
                     st.info("Ensure SHAP is installed: pip install shap")
 
     else:
@@ -76,5 +83,5 @@ def render_shap_section(dataset) -> None:
                     for c in result["top_negative"]:
                         st.markdown(f"🔴 **{c['feature']}**: {c['shap_value']:.4f}")
 
-                except Exception as e:
-                    st.error(f"Explanation failed: {str(e)}")
+                except (KeyError, MLTrainingError, OSError, TypeError, ValueError) as e:
+                    st.error(f"Explanation failed: {e!s}")

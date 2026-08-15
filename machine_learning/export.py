@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 import streamlit as st
@@ -21,7 +20,7 @@ def show_export(df: pd.DataFrame):
             try:
                 generate_pdf(df)
                 st.success("PDF gerado com sucesso!")
-            except Exception as exc:
+            except (OSError, RuntimeError, TypeError, ValueError) as exc:
                 show_error(ExportError(f"Falha ao gerar PDF: {exc}"))
 
     with col2:
@@ -33,32 +32,25 @@ def show_export(df: pd.DataFrame):
                     "📊 Baixar Excel",
                     arquivo,
                     file_name="dados.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 )
-        except Exception as exc:
+        except (ImportError, OSError, TypeError, ValueError) as exc:
             show_error(ExportError(f"Falha ao gerar Excel: {exc}"))
 
     with col3:
         try:
             csv = df.to_csv(index=False)
             st.download_button(
-                "📋 Baixar CSV",
-                csv,
-                file_name="dados.csv",
-                mime="text/csv"
+                "📋 Baixar CSV", csv, file_name="dados.csv", mime="text/csv"
             )
-        except Exception as exc:
+        except (OSError, TypeError, ValueError) as exc:
             show_error(ExportError(f"Falha ao gerar CSV: {exc}"))
 
     with col4:
         try:
             html = df.to_html()
             st.download_button(
-                "🌐 Baixar HTML",
-                html,
-                file_name="dados.html",
-                mime="text/html"
+                "🌐 Baixar HTML", html, file_name="dados.html", mime="text/html"
             )
-        except Exception as exc:
+        except (OSError, TypeError, ValueError) as exc:
             show_error(ExportError(f"Falha ao gerar HTML: {exc}"))
-            

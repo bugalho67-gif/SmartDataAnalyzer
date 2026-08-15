@@ -7,22 +7,12 @@ import plotly.graph_objects as go
 
 def show_roc(y, prob):
 
-    fpr, tpr, _ = roc_curve(
-        y,
-        prob
-    )
+    fpr, tpr, _ = roc_curve(y, prob)
 
-    area = auc(
-        fpr,
-        tpr
-    )
+    area = auc(fpr, tpr)
 
     fig = go.Figure()
 
-    fig.add_scatter(
-        x=fpr,
-        y=tpr,
-        name=f"AUC={area:.3f}"
-    )
+    fig.add_scatter(x=fpr, y=tpr, name=f"AUC={area:.3f}")
 
     st.plotly_chart(fig)

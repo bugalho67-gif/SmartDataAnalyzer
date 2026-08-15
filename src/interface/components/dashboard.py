@@ -9,7 +9,7 @@ def render_dashboard(dataset: Dataset, results: dict) -> None:
     """Render main dashboard with KPI cards."""
     # Metrics row
     col1, col2, col3, col4 = st.columns(4)
-    
+
     with col1:
         st.metric("Rows", f"{dataset.row_count:,}")
     with col2:
@@ -20,9 +20,9 @@ def render_dashboard(dataset: Dataset, results: dict) -> None:
         if dataset.quality_report:
             missing = dataset.quality_report.missing_percentage
             st.metric("Missing Data", f"{missing:.1f}%", delta=None)
-    
+
     st.markdown('<div class="premium-divider"></div>', unsafe_allow_html=True)
-    
+
     # Quick preview
     with st.expander("👁️ Data Preview (first 10 rows)", expanded=False):
         st.dataframe(
